@@ -116,7 +116,7 @@ SecurityControl::SecurityResult SecurityControl::testQueueOperation(const std::s
 
 
 		if (access == DENIED) {
-			handle = qacl.find(QueueControlKey(que, ControlKey(safmq_all_users, ControlKey::GROUP)));
+			handle = qacl.find(QueueControlKey(que, ControlKey("safmq_all_users", ControlKey::GROUP)));
 			if (handle != qacl.end())
 				access = testQueueOperation(operation, handle->second);
 		}
