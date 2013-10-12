@@ -309,7 +309,7 @@ static int mac_addr_sys ( u_char *addr)
 	}
 	return err;
 #else
-#error No Mac Address Locator defined
+//#error No Mac Address Locator defined
 #endif
 
 /* Not implemented platforms */

@@ -202,7 +202,7 @@ public:
 	@param bufSize [in] Specifies the size of the buffer, -1 indicates the buffer should
 						match the system's TCP buffer size
 	*/
-	explicit BufferedSocket(int bufSize = -1) : Socket(-1), m_allocsocket(true) { 
+	explicit BufferedSocket(int bufSize ) : Socket(-1), m_allocsocket(true) { 
 		m_socket = new Socket();
 		init(bufSize);
 	}
@@ -212,7 +212,7 @@ public:
 	@param bufSize [in] Specifies the size of the buffer, -1 indicates the buffer should
 						match the system's TCP buffer size
 	*/
-	explicit BufferedSocket(int socket_handle, int bufSize = -1) : Socket(-1), m_allocsocket(true) {
+	explicit BufferedSocket(int socket_handle, int bufSize ) : Socket(-1), m_allocsocket(true) {
 		m_socket = new Socket(socket_handle);
 		init(bufSize);
 	}
