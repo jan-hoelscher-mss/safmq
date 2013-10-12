@@ -91,7 +91,7 @@ SecurityControl::SecurityResult SecurityControl::testQueueOperation(const std::s
 	MutexLock	lock(&scmtx);
 	SecurityResult		access = DENIED;
 
-	if (operation == SYSTEM_WRITE && actor == system_user) {
+	if (operation == SYSTEM_WRITE && actor == "system_user") {
 		access = GRANTED;
 	} else {
 		// First test the actor, then test the group
@@ -171,7 +171,7 @@ SecurityControl::SecurityResult SecurityControl::verifyPassword(const std::strin
 	MutexLock		lock(&scmtx);
 	SecurityResult	access = DENIED;
 
-	if (user == system_user) {
+	if (user == "system_user") {
  		access = GRANTED;
 	} else {
 		USER_PASSWORDS::iterator	iuser = user_passwords.find(user);
@@ -184,7 +184,7 @@ SecurityControl::SecurityResult SecurityControl::verifyPassword(const std::strin
 
 SecurityControl::SecurityResult SecurityControl::createUser(const std::string& actor, const std::string& user, const std::string& password, const std::string& description)
 {
-	if (user == system_user) {
+	if (user == "system_user") {
 		return FAILED;
 	} else {
 		SecurityResult	access = testActorOperation(actor,USER);

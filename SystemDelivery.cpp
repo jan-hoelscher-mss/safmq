@@ -45,7 +45,7 @@ Signal						SystemDelivery::qsignal;
 SystemDelivery::SystemDelivery()
 {
 	// TODO: fetch the login id's
-	ttl_user = system_user;
+	ttl_user = "system_user";
 	ttl_passwd = "";
 }
 
