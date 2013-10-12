@@ -1,0 +1,123 @@
+<html>
+<head>
+<title>/home/development/safmq/java/Safmq/com/safmq/doc-files/RoundTripServer.java.html</title>
+<meta name="Generator" content="Vim/6.3">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+</head>
+<body bgcolor="#ffffff" text="#000000">
+<pre>
+<font color="#0000ff">/*
+ Copyright 2005-2007 Matthew J. Battey
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software distributed
+	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+	CONDITIONS OF ANY KIND, either express or implied. See the License for the
+	specific language governing permissions and limitations under the License.
+
+
+This software implements a Java interface to SAFMQ (see http://safmq.sourceforge.net).
+
+Created on Jun 3, 2005
+*/</font>
+
+<font color="#a020f0">import</font> java.io.IOException;
+<font color="#a020f0">import</font> java.io.InputStream;
+<font color="#a020f0">import</font> java.io.OutputStreamWriter;
+<font color="#a020f0">import</font> java.io.PrintWriter;
+<font color="#a020f0">import</font> java.net.URI;
+
+<font color="#a020f0">import</font> com.safmq.MQBuilder;
+<font color="#a020f0">import</font> com.safmq.MQException;
+<font color="#a020f0">import</font> com.safmq.MessageQueue;
+<font color="#a020f0">import</font> com.safmq.QueueMessage;
+<font color="#a020f0">import</font> com.safmq.Safmq;
+
+<font color="#0000ff">/**</font>
+<font color="#0000ff"> *</font><font color="#6a5acd"> Note: this example expects a SAFMQ server to be running on the &quot;localhost&quot;</font>
+<font color="#0000ff"> *</font><font color="#6a5acd"> or same computer as the example is being run.</font><font color="#0000ff">  It also expects a user to exist</font>
+<font color="#0000ff"> * with the name &quot;username&quot; and password &quot;password&quot;.  Additionally there should</font>
+<font color="#0000ff"> * be two queues &quot;query&quot; and &quot;resposne&quot;, and the user &quot;username&quot; should have</font>
+<font color="#0000ff"> * read and write access to to this queue. </font>
+<font color="#0000ff"> * </font>
+<font color="#0000ff"> * </font><font color="#6a5acd">@author</font><font color="#0000ff"> matt</font>
+<font color="#0000ff"> */</font>
+<font color="#2e8b57"><b>public</b></font> <font color="#2e8b57"><b>class</b></font> RoundTripServer {
+    <font color="#2e8b57"><b>static</b></font> URI queue_name;
+    <font color="#2e8b57"><b>static</b></font> String user_name = <font color="#ff00ff">&quot;username&quot;</font>;
+    <font color="#2e8b57"><b>static</b></font> String password = <font color="#ff00ff">&quot;password&quot;</font>;
+
+    <font color="#2e8b57"><b>static</b></font> {
+        <font color="#a52a2a"><b>try</b></font> {
+            queue_name = <font color="#a52a2a"><b>new</b></font> URI(<font color="#ff00ff">&quot;safmq://localhost/query&quot;</font>);
+        } <font color="#a52a2a"><b>catch</b></font> (Exception e) {
+        }
+    }
+
+    <font color="#2e8b57"><b>public</b></font> <font color="#2e8b57"><b>static</b></font> <font color="#2e8b57"><b>void</b></font> main(String[] args) {
+        <font color="#a52a2a"><b>try</b></font> {
+            <font color="#0000ff">// Allocate a connection to the query queue, we'll read from this queue</font>
+            MessageQueue    mq = MQBuilder.buildMessageQueue(queue_name,user_name,password);
+            <font color="#0000ff">// Allocate a messaeg so we can read from it.</font>
+            QueueMessage    msg = <font color="#a52a2a"><b>new</b></font> QueueMessage();
+            <font color="#2e8b57"><b>int</b></font> error;
+
+            <font color="#0000ff">// Try and retreive a message from the queue</font>
+            error = mq.Retreive(<font color="#ff00ff">true</font>,-<font color="#ff00ff">1</font>,msg);
+            <font color="#0000ff">// Close the queue we don't need it any more, this release resources on the server</font>
+            mq.Close();
+            <font color="#a52a2a"><b>if</b></font> (error == Safmq.EC_NOERROR) {
+                <font color="#0000ff">// Output the contents of the emssage</font>
+                System.out.println(<font color="#ff00ff">&quot;Message Data Follows&quot;</font>);
+                System.out.println(<font color="#ff00ff">&quot;Label: &quot;</font> + msg.getLabel());
+                InputStream in = msg.getInputStream();
+                <font color="#2e8b57"><b>byte</b></font>        data[] = <font color="#a52a2a"><b>new</b></font> <font color="#2e8b57"><b>byte</b></font>[<font color="#ff00ff">1024</font>];
+                <font color="#2e8b57"><b>int</b></font>         read;
+                <font color="#a52a2a"><b>while</b></font> ( (read=in.read(data)) &gt; <font color="#ff00ff">0</font>) {
+                    System.out.write(data,<font color="#ff00ff">0</font>,read);
+                }
+
+                <font color="#0000ff">// allocate a response message              </font>
+                QueueMessage response = <font color="#a52a2a"><b>new</b></font> QueueMessage();
+
+                <font color="#0000ff">// Set the message's body type to give readers a clue to contents</font>
+                response.setBodyType(Safmq.BT_TEXT);
+                <font color="#0000ff">// Set a name for the message, note this is optional, but some receivers</font>
+                <font color="#0000ff">// may choose an action depending on the name specified here</font>
+                response.setLabel(<font color="#ff00ff">&quot;Round Trip Response&quot;</font>);
+                <font color="#0000ff">// Note the next line is the critical step, it ties the response message</font>
+                <font color="#0000ff">// with the original query message. </font>
+                response.setReciptID(msg.getMessageID());
+
+                <font color="#0000ff">// Get the output stream to fill the body.</font>
+                <font color="#0000ff">// In this case wrap it with a PrintWriter so that we can have formated output.</font>
+                PrintWriter pw = <font color="#a52a2a"><b>new</b></font> PrintWriter(<font color="#a52a2a"><b>new</b></font> OutputStreamWriter(response.getOutputStream()));
+                pw.println(<font color="#ff00ff">&quot;This is the response to the round trip client's query&quot;</font>);
+                pw.flush();
+
+                <font color="#0000ff">// Connect to the response queue</font>
+                MessageQueue responseQueue = MQBuilder.buildMessageQueue(<font color="#a52a2a"><b>new</b></font> URI(msg.getResponseQueueName()),user_name,password);
+                error = responseQueue.Enqueue(response);
+                responseQueue.Close();
+                <font color="#a52a2a"><b>if</b></font> (error != Safmq.EC_NOERROR)
+                    System.out.println(<font color="#ff00ff">&quot;Error sending: &quot;</font>+Safmq.errorDecode(error));
+            } <font color="#a52a2a"><b>else</b></font> {
+                System.out.println(<font color="#ff00ff">&quot;Error retreiving: &quot;</font>+Safmq.errorDecode(error));
+            }
+        } <font color="#a52a2a"><b>catch</b></font> (MQException mqe) {
+            mqe.printStackTrace();
+        } <font color="#a52a2a"><b>catch</b></font> (IOException ioe) {
+            ioe.printStackTrace();
+        } <font color="#a52a2a"><b>catch</b></font> (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+</pre>
+</body>
+</html>

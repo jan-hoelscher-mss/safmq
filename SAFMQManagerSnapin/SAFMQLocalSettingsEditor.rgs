@@ -1,0 +1,34 @@
+HKCR
+{
+	LocalSettings.SAFMQLocalSettingsEditor.1 = s 'SAFMQLocalSettingsEditor Class'
+	{
+		CLSID = s '{6507769E-8DF7-4956-9A3D-85EDFE9951A7}'
+	}
+	LocalSettings.SAFMQLocalSettingsEditor = s 'SAFMQLocalSettingsEditor Class'
+	{
+		CLSID = s '{6507769E-8DF7-4956-9A3D-85EDFE9951A7}'
+		CurVer = s 'LocalSettings.SAFMQLocalSettingsEditor.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {6507769E-8DF7-4956-9A3D-85EDFE9951A7} = s 'SAFMQLocalSettingsEditor Class'
+		{
+			ProgID = s 'LocalSettings.SAFMQLocalSettingsEditor.1'
+			VersionIndependentProgID = s 'LocalSettings.SAFMQLocalSettingsEditor'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			ForceRemove 'Control'
+			ForceRemove 'Insertable'
+			ForceRemove 'ToolboxBitmap32' = s '%MODULE%, 101'
+			'MiscStatus' = s '0'
+			{
+			    '1' = s '131473'
+			}
+			'TypeLib' = s '{435C7349-73FC-4E0C-A9C8-230C5DD0E366}'
+			'Version' = s '1.0'
+		}
+	}
+}

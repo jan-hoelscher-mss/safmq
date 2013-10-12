@@ -1,0 +1,169 @@
+<!--
+###############################################################################
+# Copyright 2004-2008 Matthew J. Battey
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#	Unless required by applicable law or agreed to in writing, software distributed
+#	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+#	CONDITIONS OF ANY KIND, either express or implied. See the License for the
+#	specific language governing permissions and limitations under the License.
+#
+#
+#
+#
+#This software implements a platform independent Store and Forward Message Queue.
+################################################################################
+-->
+<project name="safmq" default="all" basedir="Safmq">
+	<description>
+		Ant Build for SAFMQ Java API
+	</description>
+	
+	<property name="version" value="0.8.3"/>
+	<property name="verbose" value="false"/>
+	<property name="targetdest" value=".."/>
+	<property name="output" value="bin"/>
+	<property name="dest" value="${targetdest}/${output}"/>
+	<property name="docoutput" value="doc"/>
+	<property name="doc" value="${targetdest}/${docoutput}"/>
+	<property name="sf-docoutput" value="sf-doc"/>
+	<property name="sf-doc" value="${targetdest}/${sf-docoutput}"/>
+
+	<property name="src" value="."/>
+
+
+	<target name="clean">
+		<delete verbose="${verbose}">
+			<fileset dir="${targetdest}">
+				<include name="${output}/**/*.class"/>
+			</fileset>
+			<fileset dir="${targetdest}">
+				<include name="${docoutput}/**"/>
+			</fileset>
+			<fileset dir="${targetdest}"
+				includes="	com.safmq.${version}.jar,
+							com.safmq.manager.${version}.jar,
+							com.safmq.${version}.src.zip,
+							com.safmq.${version}.doc.zip"/>
+		</delete>
+	</target>
+
+	<target name="apibase">
+		<mkdir dir="${dest}"/>
+		<javac	srcdir="${src}"
+				destdir="${dest}"
+				includes="com/safmq/*.java"
+				excludes="**/doc-files/**,**/old/**"
+				verbose="${verbose}" 
+				target="1.4" 
+				source="1.4" />
+	</target>
+
+	<target name="manager">
+		<mkdir dir="${dest}"/>
+		<javac	srcdir="${src}"
+				destdir="${dest}"
+				includes="com/safmq/manager/*.java"
+				excludes="**/doc-files/**,**/old/**"
+				verbose="${verbose}" 
+				target="1.4" 
+				source="1.4" />
+		<jar	destfile="${targetdest}/com.safmq.manager.${version}.jar"
+				basedir="${dest}"
+				includes="	com/safmq/manager/**/*.class,
+							com/safmq/manager/images/*.gif,
+							${TARGETDEST}/LICENSE"
+				/>
+		<jar	destfile="${targetdest}/com.safmq.manager.${version}.jar"
+				basedir="."
+				includes="com/safmq/manager/images/*.gif"
+				update="true"
+				/>
+	</target>
+
+	<target name="apijms">
+		<mkdir dir="${dest}"/>
+		<javac	srcdir="${src}"
+				destdir="${dest}"
+				includes="com/safmq/jms/*.java"
+				excludes="**/doc-files/**,**/old/**"
+				verbose="${verbose}" 
+				target="1.4"
+				source="1.4" />
+	</target>
+
+	<target name="document">
+		<javadoc	destdir="${doc}"
+					sourcePath="${src}"
+					packagenames="com.safmq"
+					access="public"
+					Version="true"
+					Author="false"
+					Use="true"
+					Footer="&lt;I&gt;Copyright Matthew J. Battey, 2004-2010&lt;/I&gt;"
+					verbose="${verbose}" > 
+		</javadoc>
+		<zip	destfile="${targetdest}/com.safmq.${version}.doc.zip"
+				basedir="${targetdest}"
+				includes="${docoutput}/**"
+				/>
+	</target>
+
+	<target name="sf-doc">
+		<javadoc	destdir="${sf-doc}"
+					sourcePath="${src}"
+					packagenames="com.safmq"
+					access="public"
+					Version="true"
+					Author="false"
+					Use="true"
+					Footer="&lt;I>Copyright Matthew J. Battey, 2004-2010&lt;/I>;
+						&lt;br>Powered By: &lt;a href='http://sourceforge.net/projects/safmq'>&lt;img src='http://sflogo.sourceforge.net/sflogo.php?group_id=147387&amp;type=10' width='80' height='15' border='0' style='vertical-align:bottom' alt='Get SAFMQ: Store and Forward Message Queue at SourceForge.net. Fast, secure and Free Open Source software downloads' />&lt;a>"
+					verbose="${verbose}" > 
+		</javadoc>
+		<zip	destfile="${targetdest}/com.safmq.${version}.doc.zip"
+				basedir="${targetdest}"
+				includes="${docoutput}/**"
+				/>
+	</target>
+
+	<target name="jms" depends="apibase, apijms">
+		<jar	destfile="${targetdest}/com.safmq.${version}.jar"
+				basedir="${dest}"
+				includes="	com/safmq/*.class,
+							com/safmq/jms/*.class,
+							${targetdest}/LICENSE"
+				excludes="com/safmq/manager/**/*.class"
+				/>
+	</target>
+
+	<target name="src">
+		<zip	destfile="${targetdest}/com.safmq.${version}.src.zip"
+				basedir="${targetdest}"
+				includes="	Safmq/com/safmq/**/*.java,
+							Safmq/com/safmq/**/*.gif,
+							Safmq/**/*.html,
+							build.xml,
+							README,
+							LICENSE,
+							qmanager.bat"
+				/>
+	</target>
+
+	<target name="base" depends="clean, apibase, manager, document, src">
+		<jar	destfile="${targetdest}/com.safmq.${version}.jar"
+				basedir="${dest}"
+				includes="com/safmq/*.class"
+				excludes="com/safmq/manager/**/*.class"
+				/>
+		<echo>SAFMQ Java API built w/o JMS Support</echo>
+	</target>
+
+	<target name="all" depends="clean, jms, manager, document, src"/>
+
+</project>

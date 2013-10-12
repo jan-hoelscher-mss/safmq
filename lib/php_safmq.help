@@ -1,0 +1,816 @@
+
+/**
+PHP functions to access SAFMQ.  The following is a sample PHP script to access
+a SAFMQ server.
+<pre>
+<font color="#7e88ab">&lt;?</font>
+<font color="#a52a2a"><b>$</b></font><font color="#008888">con</font> <font color="#a52a2a"><b>=</b></font> safmq_open<font color="#7e88ab">(</font>&quot;<font color="#ff00ff">safmq://localhost</font>&quot;,&quot;<font color="#ff00ff">mylogin</font>&quot;,&quot;<font color="#ff00ff">mypassword</font>&quot;<font color="#7e88ab">)</font>;
+<font color="#a52a2a"><b>if</b></font> <font color="#7e88ab">(</font><font color="#a52a2a"><b>$</b></font><font color="#008888">con</font> <font color="#a52a2a"><b>!=</b></font><font color="#a52a2a"><b>=</b></font> <font color="#ff00ff">false</font><font color="#7e88ab">)</font> <font color="#7e88ab">{</font>
+    <font color="#a52a2a"><b>$</b></font><font color="#008888">queue</font> <font color="#a52a2a"><b>=</b></font> safmq_open_queue<font color="#7e88ab">(</font>&quot;<font color="#ff00ff">myqueue</font>&quot;,<font color="#a52a2a"><b>$</b></font><font color="#008888">con</font><font color="#7e88ab">)</font>;
+    <font color="#a52a2a"><b>if</b></font> <font color="#7e88ab">(</font><font color="#a52a2a"><b>$</b></font><font color="#008888">queue</font> <font color="#a52a2a"><b>!=</b></font><font color="#a52a2a"><b>=</b></font> <font color="#ff00ff">false</font><font color="#7e88ab">)</font> <font color="#7e88ab">{</font>
+        <font color="#a52a2a"><b>$</b></font><font color="#008888">msg</font> <font color="#a52a2a"><b>=</b></font> safmq_msg<font color="#7e88ab">()</font>;
+        <font color="#a52a2a"><b>$</b></font><font color="#008888">msg</font><font color="#529584"><b>-&gt;</b></font>Label <font color="#a52a2a"><b>=</b></font> &quot;<font color="#ff00ff">Hello World</font>&quot;;
+        <font color="#a52a2a"><b>$</b></font><font color="#008888">msg</font><font color="#529584"><b>-&gt;</b></font>Body <font color="#a52a2a"><b>=</b></font> &quot;<font color="#ff00ff">Hello to all the world</font>&quot;;
+        <font color="#a52a2a"><b>if</b></font> <font color="#7e88ab">(</font>safmq_enqueue<font color="#7e88ab">(</font><font color="#a52a2a"><b>$</b></font><font color="#008888">msg</font>,<font color="#a52a2a"><b>$</b></font><font color="#008888">queue</font>,<font color="#a52a2a"><b>$</b></font><font color="#008888">con</font><font color="#7e88ab">))</font> <font color="#7e88ab">{</font>
+            <font color="#008888">printf</font><font color="#7e88ab">(</font>&quot;<font color="#ff00ff">The message was sent!</font><font color="#7e88ab">\n</font>&quot;<font color="#7e88ab">)</font>;
+        <font color="#7e88ab">}</font> <font color="#a52a2a"><b>else</b></font> <font color="#7e88ab">{</font>
+            <font color="#008888">printf</font><font color="#7e88ab">(</font>&quot;<font color="#ff00ff">The message was not sent!</font><font color="#7e88ab">\n</font>&quot;<font color="#7e88ab">)</font>;
+        <font color="#7e88ab">}</font>
+
+        <font color="#a52a2a"><b>$</b></font><font color="#008888">msg</font> <font color="#a52a2a"><b>=</b></font> <font color="#ff00ff">false</font>;
+        <font color="#a52a2a"><b>$</b></font><font color="#008888">msg</font> <font color="#a52a2a"><b>=</b></font> safmq_retrieve<font color="#7e88ab">(</font><font color="#ff00ff">true</font>,<font color="#ff00ff">-1</font>,<font color="#a52a2a"><b>$</b></font><font color="#008888">queue</font>,<font color="#a52a2a"><b>$</b></font><font color="#008888">con</font><font color="#7e88ab">)</font>;
+        <font color="#a52a2a"><b>if</b></font> <font color="#7e88ab">(</font><font color="#a52a2a"><b>$</b></font><font color="#008888">msg</font> <font color="#a52a2a"><b>!=</b></font><font color="#a52a2a"><b>=</b></font> <font color="#ff00ff">false</font><font color="#7e88ab">)</font> <font color="#7e88ab">{</font>
+            <font color="#008888">printf</font><font color="#7e88ab">(</font>&quot;<font color="#ff00ff">Message Retrieved</font><font color="#7e88ab">\n</font>&quot;<font color="#7e88ab">)</font>;
+            <font color="#008888">printf</font><font color="#7e88ab">(</font>&quot;<font color="#ff00ff">Label: %s</font><font color="#7e88ab">\n</font>&quot;, <font color="#a52a2a"><b>$</b></font><font color="#008888">msg</font><font color="#529584"><b>-&gt;</b></font>Label<font color="#7e88ab">)</font>;
+            <font color="#008888">printf</font><font color="#7e88ab">(</font>&quot;<font color="#ff00ff">Body: %s</font><font color="#7e88ab">\n</font>&quot;, <font color="#a52a2a"><b>$</b></font><font color="#008888">msg</font><font color="#529584"><b>-&gt;</b></font>Body<font color="#7e88ab">)</font>;
+            <font color="#008888">printf</font><font color="#7e88ab">(</font>&quot;<font color="#ff00ff">Timestamp: %s</font><font color="#7e88ab">\n</font>&quot;, <font color="#008888">strftime</font><font color="#7e88ab">(</font>&quot;<font color="#ff00ff">%Y-%m-%d %H:%M:%S</font>&quot;,<font color="#a52a2a"><b>$</b></font><font color="#008888">msg</font><font color="#529584"><b>-&gt;</b></font>TimeStamp<font color="#7e88ab">))</font>;
+            <font color="#008888">printf</font><font color="#7e88ab">(</font>&quot;<font color="#ff00ff">ID: %s</font><font color="#7e88ab">\n</font>&quot;, <font color="#a52a2a"><b>$</b></font><font color="#008888">msg</font><font color="#529584"><b>-&gt;</b></font>MessageID<font color="#7e88ab">)</font>;
+        <font color="#7e88ab">}</font> <font color="#a52a2a"><b>else</b></font> <font color="#7e88ab">{</font>
+            <font color="#008888">printf</font><font color="#7e88ab">(</font>&quot;<font color="#ff00ff">Unable to retrieve message</font><font color="#7e88ab">\n</font>&quot;<font color="#7e88ab">)</font>;
+        <font color="#7e88ab">}</font>
+
+    <font color="#7e88ab">}</font> <font color="#a52a2a"><b>else</b></font> <font color="#7e88ab">{</font>
+        <font color="#008888">printf</font><font color="#7e88ab">(</font>&quot;<font color="#ff00ff">Could not open myqueue</font><font color="#7e88ab">\n</font>&quot;<font color="#7e88ab">)</font>;
+    <font color="#7e88ab">}</font>
+    safmq_close<font color="#7e88ab">(</font><font color="#a52a2a"><b>$</b></font><font color="#008888">con</font><font color="#7e88ab">)</font>;
+<font color="#7e88ab">}</font> <font color="#a52a2a"><b>else</b></font> <font color="#7e88ab">{</font>
+    <font color="#008888">printf</font><font color="#7e88ab">(</font>&quot;<font color="#ff00ff">Connect connect to localhost</font><font color="#7e88ab">\n</font>&quot;<font color="#7e88ab">)</font>;
+<font color="#7e88ab">}</font>
+<font color="#7e88ab">?&gt;</font>
+</pre>
+*/
+namespace safmq_php {
+
+/**
+A SAFMQ URL.  A SAFMQ URL is a string, with the following formats:
+<ul>
+<li>//host
+<li>safmq://host
+<li>safmq://host:port
+<li>safmq://username:password@host
+<li>safmq://username:password@host:port
+<li>safmqs://host
+<li>safmqs://host:port
+<li>safmqs://username:password@host
+<li>safmqs://username:password@host:port
+</ul>
+<br>
+<p><b>Note:</b> safmqs specifies a SSL safmq connection.</p>
+
+*/
+class URL : public String{
+};
+
+/**
+A user's id and description.
+*/
+class UserInfo {
+public:
+	/// The description of a user
+	STring description;
+	/// The login id of a user
+	String name;
+};
+
+/**
+A SAFMQ message object.
+*/
+class Message {
+public:
+	/// URL of the queue to which resposne messages should be sent
+	String ResponseQueueName;
+	/// Label of this message
+	String Label;
+	/// Body (data) of this message
+	String Body;
+	/// UUID identifying this message
+	UUID MessageID;
+	/// UUID of the message this message is responding to, this value is set by the SAFMQ server.
+	UUID ReciptID;
+	/// Number of seconds this message should remain on the queue before being purged
+	Integer TTL;
+	/// Flag indicating this message should be responded to by the SAFMQ server if it is purged
+	Boolean TTLErrorWanted;
+	/// The priority of this message, values are from 0 to 5, 5 beign highest priority
+	Integer MessagePriority;
+	/// The epoc timestamp of when this message was sent, this value is set by the SAFMQ server.
+	Integer	TimeStamp;
+};
+
+/**
+A connection to a SAFMQ server.
+*/
+class Connection {
+
+};
+
+/**
+A reference to a queue on a SAFMQ server.
+*/
+class Queue {
+
+};
+
+/**
+A interator used to step through the elements in a queue, used
+in sequential reading of the queue.
+*/
+class Cursor {
+
+};
+
+/**
+Permissions available to users and groups.
+*/
+class Permissions {
+public:
+	/// Indicates the ability to modify groups
+	Boolean ModifyGroups;
+	/// Indicates the ability to modify users
+	Boolean ModifyUsers;
+	/// Indicates the ability to modify queues
+	Boolean ModifyQueues;
+};
+
+/**
+A set of permissions a user or group may have against a queue.
+*/
+class QueuePermissions {
+public:
+	/// The name of the entity
+	String Entity;
+	/// Indicates whether the entity is a group
+	Boolean IsGroup;
+	/// Indicates the ability to read from the queue
+	Boolean Read;
+	/// Indicates the ability to write to the queue
+	Boolean Write;
+	/// Indicates the ability to delete the queue
+	Boolean Destroy;
+	/// Indicates the abiltiy to change the security for the queue
+	Boolean ChangeSecurity;
+};
+
+/**
+A universally uniqueue identifier.  UUID's have the format:<br>
+
+<pre>
+XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+</pre>
+
+Where each X represents 1 Hexidecimal numeral. An example would be:<br>
+
+<pre>
+ada84d00-a798-4401-7b8e-0013d404307d
+</pre>
+*/
+class UUID : public String {
+};
+
+/**
+Provides the major protocol version for server connected via
+the <code>con</code> Connection resource.
+
+@param con [in,optional] Connection Resource connected to a server via <code>safmq_open</code>
+@return The major protocol version
+*/
+Integer safmq_get_server_major_protocol_version(Connection con);
+
+/**
+Provides the minor protocol version for server connected via
+the <code>con</code> Connection resource.
+
+@param con [in,optional] Connection Resource connected to a server via <code>safmq_open</code>
+@return The minor protocol version
+*/
+Integer safmq_get_server_minor_protocol_version(Connection con);
+
+/**
+Opens a connection to a SAFMQ Server.  Accepts a url and optional user ideitification
+parameters.  The url is in the format "<code>safmq://username:password@host</code>".  
+The protocol, <code>username</code> and <code>password</code> elements are optional with the
+minimum url consisting of "//host".  However, if a SSL connection is desired, use
+"safmqs://host" or "safmq://username:password@host" to establish a SSL connection.
+
+
+@param url [in] The url addressing the server
+@param username [in, optional] The user identifier, incase it is not specified in the URL
+@param password [in, optional] The user's password incase is is not specified in the URL
+
+@return FALSE (Boolean) if a connection was not made, otherwise a Connection resource
+			connected to the SAFMQ server.
+*/
+Connection safmq_open(URL url, String username, String password);
+
+/**
+Opens a connection to a SAFMQ Server, and authentictes usin X.509 authentication.  Accepts a url,
+private key path, certificate path, and optional user ideitification
+parameters.  The url is in the format "<code>safmq://username:password@host</code>".  
+The protocol, <code>username</code> and <code>password</code> elements are optional with the
+minimum url consisting of "//host".  However, if a SSL connection is desired, use
+"safmqs://host" or "safmq://username:password@host" to establish a SSL connection.
+
+
+@param url [in] The url addressing the server
+@param privateKeyPath [in] The path to the X.509 private key (PEM File)
+@param certificatePath [in] The path to the X.509 certificate (PEM File)
+@param username [in, optional] The user identifier, incase it is not specified in the URL
+@param password [in, optional] The user's password incase is is not specified in the URL
+
+@return FALSE (Boolean) if a connection was not made, otherwise a Connection resource
+			connected to the SAFMQ server.
+*/
+Connection safmq_cert_open(URL url, String privateKeyPath, String certificatePath, String username, String password);
+
+/**
+Closes a connection to a SAFMQ server.  Any open queues are automatically closed
+and any pending transactions are rolled back and ended.
+
+
+@param con [in, optional] The connection to close, if not specified, closes
+				the most recently opened conneciton.
+@return TRUE if the connection was found and closed, FALSE if the connection 
+		was not closed.
+*/
+Boolean safmq_close(Connection con);
+
+/**
+Opens a queue for reading and writing.
+
+@param name [in] Name of the queue to open
+@param con [in,optional]  The Connection resource of the server to open the Queue on, if not specified, uses the most recently opened Connection.
+
+@return FALSE (Boolean) if the opening of the queue failed, other wise the Queue resource of the queue being opened
+*/
+Queue safmq_open_queue(String name, Connection con);
+
+/**
+Closes a previously opened queue.
+
+@param queue [in, optional] The Queue resource of the queue to close, if not specified, uses the most recently opened Queue.
+@param con [in, optional] The Connection resource of the server to close the queue on, if not specified, uses the most recently opened Connection.
+*/
+Boolean safmq_close_queue(Queue queue, Connection con);
+
+/**
+Allocates a new empty message object for use in Enqueueing.
+
+@return Message
+*/
+Message safmq_msg();
+
+/**
+Places a message in a queue.
+
+@param msg [in,out] The message object to enqueue the timestamp
+@param queue [in, optional] The queue receiving the message,
+					if not specified, the most recently opened queue
+					is used.
+@param con [in, optional] The connection connected to the SAFMQ server
+				which will receive the message, if not specified, the
+				most recently opened connection is used.
+
+@return TRUE if the message was enqueued, FALSE otherwise.
+*/
+Boolean safmq_enqueue(Message msg, Queue queue, Connection con);
+
+/**
+Sends a message to the SAFMQ server to be forwarded to a queue, possibly
+on another server.
+
+@param URL [in] The URL of the destiantion queue.
+@param msg [in,out] The message object to enqueue the timestamp
+@param con [in, optional] The connection connected to the SAFMQ server
+				which will receive the message, if not specified, the
+				most recently opened connection is used.
+
+@return TRUE if the message was enqueued, FALSE otherwise.
+*/
+Boolean safmq_enqueue_with_relay(URL relayURL, Message msg, Connection con);
+
+
+/**
+Retrieves the first message at the beginining of a queue.
+
+@param get_body [in] Flag indicating whether to retrieve the body of the message or not
+@param timeout [in] Number of seconds to wait for a new message, (-1) indicates an infinite wait.
+@param queue [in, optional] The Queue resource of the queue to retrieve the message from, if not specified, uses the most recently opened Queue.
+@param con [in, optional] The Connection resource of the server to retrieve the message from, if not specified, uses the most recently opened Connection.
+
+@return FALSE (boolean) if an error occured, otherwise the Message read form the server.
+*/
+Message safmq_retrieve(Boolean get_body, Integer timeout, Queue queue, Connection con);
+
+
+/**
+Retrieves a message from the queue utilizing a recipt id to locate the message.
+
+@param reciptID [in] Recipt ID of the message to find
+@param get_body [in] Flag indicating whether to retrieve the body of the message
+@param timeout [in] The number of seconds to wait for the message
+@param queue [in,optional] The queue to readfrom, if not specified, uses the most recently opened message
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE (Boolean) if an error occured, a Message otherwise.
+*/
+Message safmq_retrieve_id(UUID reciptID, Boolean get_body, Integer timeout, Queue queue, Connection con);
+
+/**
+Retrieves a message from the queue using a cursor to locate the message.
+
+@param get_body [in] Flag indicating whether to retrieve the body of the message
+@param cursor [in] The cursor position locating the message to retrieve.
+@param queue [in,optional] The queue to readfrom, if not specified, uses the most recently opened message
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE (Boolean) if an error occured, a Message otherwise.
+*/
+Message safmq_retrieve_cursor(Boolean get_body, Cursor cursor, Queue queue, Connection con);
+
+/**
+Retrieves the data from the first message in the queue, but does not remove the
+message from the queue.
+
+@param get_body [in] Flag indicating whether to retrieve the body of the message
+@param timeout [in] The number of seconds to wait for the message
+@param queue [in,optional] The queue to readfrom, if not specified, uses the most recently opened message
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE (Boolean) if an error occured, a Message otherwise.
+*/
+Message safmq_peek_front(Boolean get_body, Ineger timeout, Queue queue, Connection con);
+
+/**
+Retrieves the data from a message located using a recipt id, but does not remove the
+message fromt he queue.
+
+@param reciptID [in] Recipt ID of the message to find
+@param get_body [in] Flag indicating whether to retrieve the body of the message
+@param timeout [in] The number of seconds to wait for the message
+@param queue [in,optional] The queue to readfrom, if not specified, uses the most recently opened message
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE (Boolean) if an error occured, a Message otherwise.
+*/
+Message safmq_peek_id(UUID reciptid, Boolean get_body, Integer timeout, Queue queue, Connection con);
+
+/**
+Opens a cursor for sequentially reading from the queue.
+
+@param queue [in,optional] The queue to readfrom, if not specified, uses the most recently opened message
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE (Boolean) if an error occured, a Cursor otherwise.
+*/
+Cursor safmq_open_cursor(Queue queue, Connection con);
+
+/**
+Closes a queue cursor.
+
+@param cursor [in] The cursor position locating the message to retrieve.
+@param queue [in,optional] The queue to readfrom, if not specified, uses the most recently opened message
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, TRUE if it was successful.
+*/
+Boolean safmq_close_cursor(Cursor cursor, Queue queue, Connection con);
+
+/**
+Advances a cursor to the next message in the queue
+
+@param cursor [in] The cursor position locating the message to retrieve.
+@param queue [in,optional] The queue to readfrom, if not specified, uses the most recently opened message
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, TRUE if it was successful.
+*/
+Boolean safmq_advance_cursor(Cursor cursor, Queue queue, Connection con);
+
+/**
+Retrieves the data from a message located by a cursor but does not remove the message
+from the queue.
+
+@param get_body [in] Flag indicating whether to retrieve the body of the message
+@param cursor [in] The cursor position locating the message to retrieve.
+@param queue [in,optional] The queue to readfrom, if not specified, uses the most recently opened message
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE (Boolean) if an error occured, a Message otherwise.
+*/
+Message safmq_peek_cursor(Boolean get_body, Cursor cursor, Queue queue, Connection con);
+
+/**
+Moves the cursor's possition to be located on a message indicated by the recipt id.
+
+@param reciptID [in] Recipt ID of the message to find
+@param timeout [in] The number of seconds to wait for the message
+@param queue [in,optional] The queue to readfrom, if not specified, uses the most recently opened message
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE (Boolean) if an error occured, a Message otherwise.
+*/
+Boolean safmq_seek_id(UUID reciptID, Integer timeout, Cursor cursor, Queue queue, Connection con);
+
+/**
+Determines if the cursor is still valid.
+
+@param cursor [in] The cursor to test
+@param queue [in,optional] The queue to readfrom, if not specified, uses the most recently opened message
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, TRUE if it was successful.
+*/
+Boolean safmq_test_cursor(Cursor cursor, Queue queue, Connection con);
+
+/**
+Creates a new message queue.
+
+@param name [in] Tne name of the new queue
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, TRUE if it was successful.
+*/
+Boolean safmq_create_queue(String name, Connection con);
+
+/**
+Deletes a message queue.
+
+@param name [in] Tne name of the new to delete
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, TRUE if it was successful.
+*/
+Boolean safmq_delete_queue(String name, Connection con);
+
+/**
+Sets a user's permisions against a queue.
+
+@param queue_name [in] The name of the queue to apply the users permissions to
+@param username [in] The name of the user to assign permissions to
+@param read [in] Allow reading of the queue
+@param write [in] Allow writing of the queue
+@param destroy [in] Allow the queue to be deleted
+@param change_seciryt [in] ALlow the queues permissions to be changed
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, TRUE if it was successful.
+*/
+Boolean safmq_queue_set_user_permission(String queue_name, String username, Boolean read, Boolean write, Boolean destroy, Boolean change_security, Connection con);
+
+/**
+Removes a user's permisisons against a queue
+
+@param queue_name [in] The name of the queue to apply the users permissions to
+@param username [in] The name of the user to assign permissions to
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, TRUE if it was successful.
+*/
+Boolean safmq_queue_delete_user_permission(String queue_name, String username, Connection con);
+/**
+Sets a groups's permissions against a queue
+
+@param queue_name [in] The name of the queue to apply the users permissions to
+@param group_name [in] The name of the group to assign permissions to
+@param read [in] Allow reading of the queue
+@param write [in] Allow writing of the queue
+@param destroy [in] Allow the queue to be deleted
+@param change_seciryt [in] ALlow the queues permissions to be changed
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, TRUE if it was successful.
+*/
+Boolean safmq_queue_set_group_permission(String queue_name, String group_name, Boolean read, Boolean write, Boolean destroy, Boolean change_security, Connection con);
+
+/**
+Removes a groups's permissions against a queue
+
+@param queue_name [in] The name of the queue to apply the users permissions to
+@param group_name [in] The name of the group to assign permissions to
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, TRUE if it was successful.
+*/
+Boolean safmq_queue_delete_group_permission(String queue_name, String group_name, Connection con);
+/**
+Creates a new user group.
+
+@param group_name [in] The name of the group to assign permissions to
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, TRUE if it was successful.
+*/
+Boolean safmq_create_group(String group_name, Connection con);
+/**
+Deletes a user group.
+
+@param group_name [in] The name of the group to assign permissions to
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, TRUE if it was successful.
+*/
+Boolean safmq_delete_group(String group_name, Connection con);
+/**
+Creates a new user.
+
+@param username [in] The name of the user 
+@param password [in] The secret password for the user
+@param description [in] A description of the user, possibly a full name
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, TRUE if it was successful.
+*/
+Boolean safmq_create_user(String username, String password, String description, Connection con);
+/**
+Removes a user.
+
+@param username [in] The name of the user to delete
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, TRUE if it was successful.
+*/
+Boolean safmq_delete_user(String username, Connection con);
+/**
+Sets the permisisons of a user
+
+@param username [in] The name of the user
+@param modifyqueues [in] The permission to create and modify queues
+@param modifyusers [in] The permission to create and modify users
+@param modifygroups [in] The permission to create and modify groups
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, a Permissions object for the user
+*/
+Boolean safmq_user_set_permissions(String username, Boolean modifyqueues, Boolean modifyusers, Boolean modifygroups, Connection con);
+
+/**
+Gets the permission of a user
+
+@param username [in] The name of the user
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, a Permissions object for the user
+*/
+Permssions safmq_user_get_permissions(String username, Connection con);
+
+/**
+Sets the password of a user.
+
+@param username [in] The name of the user
+@param password [in] The new password for the user
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, TRUE if successful
+*/
+Boolean safmq_set_password(String username, String password, Connection con);
+/**
+Adds a user to a group.
+
+@param group_name [in] The group to add the user to
+@param username [in] The name of the user
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, TRUE if successful
+*/
+Boolean safmq_group_add_user(String group_name, String username, Connection con);
+/**
+Removes a user from a group.
+
+@param group_name [in] The group to remove the user from
+@param username [in] The name of the user
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, TRUE if successful
+*/
+Boolean safmq_group_delete_user(String group_name, String username, Connection con);
+/**
+Sets the permission of a user group.
+
+@param group_name [in] The name of the group
+@param modifyqueues [in] The permission to create and modify queues
+@param modifyusers [in] The permission to create and modify users
+@param modifygroups [in] The permission to create and modify groups
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, a Permissions object for the user
+*/
+Boolean safmq_group_set_permissions(String group_name, Boolean modifyqueues, Boolean modifyusers, Boolean modifygroups, Connection con);
+/**
+Gets the permisison s of a user group.
+
+@param group_name [in] The name of the group
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, a Permissions object for the user
+*/
+Permissions safmq_group_get_permissions(String group_name, Connection con);
+
+/**
+Lists all queues on the server
+
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, an array of queue names otherwise
+*/
+String[] safmq_enumerate_queues(Connection con);
+
+/**
+Lists all users on the server
+
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, an array of UserInfo objects otherwise
+*/
+UserInfo[] safmq_enumerate_users(Connection con);
+/**
+Lists all groups on the server
+
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, an array of group names otherwise
+*/
+String[] safmq_enumerate_groups(Connection con);
+
+/**
+Lists all members of a group
+
+@param group_name [in] The name of the group to enumerate
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, an array of user names otherwise
+*/
+String[] safmq_group_enumerate_users(String group_name, Connection con);
+
+/**
+Lists all groups of which the user is a member
+
+@param user_name [in] The name of the user to enumerate
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, an array of group names otherwise
+*/
+String[] safmq_user_enumerate_groups(String user_name, Connection con);
+
+/**
+Lists all permissions for a queue
+
+@param queue_name [in] The name of the queue to enumerate permissions
+@param con [in,optional] The server to read from, if not specified, uses the most recently opened connection
+
+@return FALSE if an error occured, an array of QueuePermissions objects otherwise
+*/
+QueuePermissions[] safmq_queue_enumerate_permissions(String queue_name, Connection con);
+
+/**
+Lists all open connections, queues and cursors
+*/
+void safmq_display_connections();
+
+/**
+Begins a transaction.  Once a transaction is begun all actions are not committed until
+either <code>safmq_commit_transaction()</code> or <code>safmq_end_transaction()</code>
+are called. Note, if the connection is closed before calling commit or end, the
+transaction will be rolled back.
+@param con [in, optional] The safmq connection
+*/
+bool safmq_begin_transaction(Connection con);
+
+/**
+Commits the transaction with out closing the transaction.
+@param con [in, optional] The safmq connection
+*/
+bool safmq_commit_transaction(Connection con);
+
+/**
+Performs an "undo" on all actions done durring the transaction.
+@param con [in, optional] The safmq connection
+*/
+bool safmq_rollback_transaction(Connection con);
+
+/**
+Ends the transaction and explicity commits all actions.
+@param con [in, optional] The safmq connection
+*/
+bool safmq_end_transaction(Connection con);
+
+/**
+Adds a X.509 identity.  These identities are used when loging in without a password.
+@param subjectDN The subject name of the X.509 certificate
+@param issuerDN The issuer name of the X.509 certificate
+@param username The user to be identified by the certificate data.
+@param con [in, optional] The safmq connection
+*/
+bool safmq_add_user_identity(String subjectDN, String issuerDN, String username, Connection con);
+
+/**
+Removes an X.509 identity from the SAFMQ security configuraiton.
+@param subjectDN The subject name of the X.509 certificate
+@param issuerDN The issuer name of the X.509 certificate
+@param con [in, optional] The safmq connection
+*/
+bool safmq_remove_user_identity(String subjectDN, String issuerDN, Connection con);
+
+/**
+Lists the user identities for a particular user.
+@param username The name of the account
+@return An array of Identity objects
+*/
+Identity[] safmq_enumerate_user_identities(String username);
+
+/**
+X.509 Identity Information
+*/
+struct Identity {
+	/** Subject Distinguished Name */
+	subjectDN;
+	/** Issuer Distinguisehd Name */
+	issuerDN;
+};
+
+/**
+Statistical information about a queue or the server.
+*/
+struct QueueStatistics {
+	/// Number of messages sent and received
+	messageCount;
+	/// Number of bytes on disk
+	storageBytes;
+	// Number of bytes in queues
+	messageBytes;
+	/// Number of messages enqueued in the last 10 seconds
+	enqueued10second;
+	/// Number of messages enqueued in the last 60 seconds
+	enqueued60second;
+	/// Number of messages enqueued in the last 300 seconds
+	enqueued300second;
+	/// Number of messages retrieved in the last 10 seconds
+	retrieved10second;
+	/// Number of messages retrieved in the last 60 seconds
+	retrieved60second;
+	/// Number of messages retrieved in the last 300 seconds
+	retrieved300second;
+	/// Number of messages "peeked" in the last 10 seconds
+	peeked10second;
+	/// Number of messages "peeked" in the last 60 seconds
+	peeked60second;
+	/// Number of messages "peeked" in the last 300 seconds
+	peeked300second;
+};
+
+/**
+Gets statistical information about a queue.
+@param includeStorageBytes [in] Asks the server to report the number of bytes on disk
+@param includeMessageBytes [in] Asks the server to report hte number of bytes in the queue
+@param queueHandle [in,optional] Indicates which queue to use
+@param con [in,optional] Indicates which SAFMQ server conection to use
+@return Statistics about the queue
+*/
+QueueStatistics safmq_get_queue_statistics(bool includeStorageBytes, bool includeMessageBytes, QueueHandle queueHandle, Connection con);
+
+/**
+Gets statistical information about a server.
+@param con [in,optional] Indicates which SAFMQ server conection to use
+@return Statistics about the server
+*/
+QueueStatistics safmq_get_server_statistics(Connection con);
+
+/**
+Information about a client connection.
+*/
+struct ClientInfo {
+	/// User ID used to connect
+	String username;
+	/// IP Address of the client
+	String address;
+	/// IP Port of the client
+	Integer port;
+};
+
+/**
+Gets a list of connected clients.
+@param con [in,optional] Indicates the SAFMQ server connection
+@return An array of client information
+*/
+ClientInfo[] safmq_get_client_info(Connection con);
+
+/**
+Information for a temporary queue.
+*/
+struct TempQueue {
+	/// The name of the temporary queue (auto generated)
+	String queue_name;
+	/// A handle to the open queue
+	QueueHandle queuehandle;	
+};
+
+/**
+Creates a temporary queue.  The queue is automatically deleted when
+the queue is no longer in use. Sets the current queue to be the newly created
+temp queue.  All data in the queue is purged when it is deleted.
+@param con [in,optional] Indicat4es which SAFMQ server connection to use
+@return The name and a handle to the temporary queue.
+*/
+TempQueue safmq_create_temp_queue(Connection con);
+
+
+}

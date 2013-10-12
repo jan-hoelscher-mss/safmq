@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.5.0_12" class="java.beans.XMLDecoder"> 
+ <object class="java.util.Vector"> 
+  <void method="add"> 
+   <object class="com.safmq.manager.ServerSpec"> 
+    <void property="name"> 
+     <string>localhost</string> 
+    </void> 
+    <void property="password"> 
+     <string></string> 
+    </void> 
+    <void property="storePassword"> 
+     <boolean>true</boolean> 
+    </void> 
+    <void property="user"> 
+     <string>admin</string> 
+    </void> 
+   </object> 
+  </void> 
+ </object> 
+</java> 

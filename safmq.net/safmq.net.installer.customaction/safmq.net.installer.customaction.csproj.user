@@ -1,0 +1,6 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <StartAction>Program</StartAction>
+    <StartProgram>E:\blacksheep\safmq.0.5.2\safmq.net\safmq.net.install\Debug\setup.exe</StartProgram>
+  </PropertyGroup>
+</Project>

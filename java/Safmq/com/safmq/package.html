@@ -1,0 +1,135 @@
+<html>
+<head>
+<title>SAFMQ Java Connection API</title>
+</head>
+<body>
+<p>This package contains objects for communicating with the SAFMQ message queue server.  
+The <code>com.safmq</code> API is enteded to be full course communications package
+for use with the SAFMQ message queue server.  As such it entails all the capabilities that
+the SAFMQ server provides.  The primary class <code>MQConnection</code> facilitates communication
+and provides the API for Queue Reading and Writing; Queue Management; User Management; and
+Security Group Management.</p>
+
+<p>Additionaly a facade class has been provided for easier access in queue reading and writing.  
+This class, <code>MessageQueue</code> exists so that programs need not be concerned with
+security management concerns and can instead strictly read from and write to the queues.  Additionally,
+a builder class, <code>MQBuilder</code> has been provided which constructs <code>MessageQueue</code> and
+<code>MQConnection</code> classes from a URL string and login credentials.</p>
+
+<h3>Round Trip Messaging</h3>
+<p>Examples of round trip messageing have been provided:</p>
+<ul>
+<li><a href="doc-files/RoundTripClient.java.html" target=_BLANK>RoundTripClient.java</a> <a href="doc-files/RoundTripClient.java">src</a>
+<li><a href="doc-files/RoundTripServer.java.html" target=_BLANK>RoundTripServer.java</a> <a href="doc-files/RoundTripServer.java">src</a>
+</ul>
+
+<h3>SAFMQ JMS Notes</h3>
+<ul>
+<li>Safmq 0.6 supports only Queue destinations</li>
+<li>Safmq 0.6 supports TextMessage and BytesMessage message types</li>
+<li>JMS 1.1 and JMS 1.0 interfaces are supported</li>
+</ul>
+
+<h3>JMS 1.1 Example</h3>
+<span style="font-family: monospace">
+<font color="#a520f7">import</font>&nbsp;java.util.Date;<br>
+<font color="#a520f7">import</font>&nbsp;java.util.Enumeration;<br>
+<font color="#a520f7">import</font>&nbsp;java.util.Hashtable;<br>
+<br>
+<font color="#a520f7">import</font>&nbsp;javax.jms.Connection;<br>
+<font color="#a520f7">import</font>&nbsp;javax.jms.ConnectionFactory;<br>
+<font color="#a520f7">import</font>&nbsp;javax.jms.Message;<br>
+<font color="#a520f7">import</font>&nbsp;javax.jms.MessageConsumer;<br>
+<font color="#a520f7">import</font>&nbsp;javax.jms.MessageProducer;<br>
+<font color="#a520f7">import</font>&nbsp;javax.jms.Queue;<br>
+<font color="#a520f7">import</font>&nbsp;javax.jms.QueueBrowser;<br>
+<font color="#a520f7">import</font>&nbsp;javax.jms.Session;<br>
+<font color="#a520f7">import</font>&nbsp;javax.jms.TextMessage;<br>
+<font color="#a520f7">import</font>&nbsp;javax.naming.Context;<br>
+<font color="#a520f7">import</font>&nbsp;javax.naming.InitialContext;<br>
+<font color="#a520f7">import</font>&nbsp;javax.naming.NamingEnumeration;<br>
+<br>
+<br>
+<font color="#298a52"><b>public</b></font>&nbsp;<font color="#298a52"><b>class</b></font>&nbsp;SafmqJMSTest {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#298a52"><b>public</b></font>&nbsp;<font color="#298a52"><b>static</b></font>&nbsp;<font color="#298a52"><b>void</b></font>&nbsp;main(String[]&nbsp;args)&nbsp;<font color="#298a52"><b>throws</b></font>&nbsp;Exception {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hashtable environment = <font color="#ff00ff">null</font>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;environment = <font color="#a52829"><b>new</b></font>&nbsp;Hashtable();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;environment.put(Context.INITIAL_CONTEXT_FACTORY, com.safmq.jms.InitialContextFactory.<font color="#298a52"><b>class</b></font>.getName());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;environment.put(Context.PROVIDER_URL, <font color="#ff00ff">&quot;safmq://localhost&quot;</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;environment.put(Context.SECURITY_PRINCIPAL, <font color="#ff00ff">&quot;admin&quot;</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;environment.put(Context.SECURITY_CREDENTIALS, <font color="#ff00ff">&quot;&quot;</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Context ctx = <font color="#a52829"><b>new</b></font>&nbsp;InitialContext(environment);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ConnectionFactory&nbsp;&nbsp; cf = (ConnectionFactory)ctx.lookup(<font color="#ff00ff">&quot;ConnectionFactory&quot;</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Queue&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; q = (Queue)ctx.lookup(<font color="#ff00ff">&quot;testQ&quot;</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Connection&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;con = cf.createConnection();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Session&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; session = con.createSession(<font color="#ff00ff">false</font>, Session.AUTO_ACKNOWLEDGE);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;QueueBrowser&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;qb = session.createBrowser(q);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Message&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; m;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MessageProducer&nbsp;&nbsp;&nbsp;&nbsp; mp = session.createProducer(q);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TextMessage&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tm = session.createTextMessage();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tm.setStringProperty(<font color="#ff00ff">&quot;label&quot;</font>, <font color="#ff00ff">&quot;my label&quot;</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tm.setText(<font color="#ff00ff">&quot;Hello World&quot;</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000ff">// Send the same message to the server 3 times&nbsp;&nbsp;&nbsp;&nbsp;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mp.send(tm);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mp.send(tm);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mp.send(tm);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000ff">// List all the messages on the queue </font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Enumeration e = qb.getEnumeration();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#a52829"><b>while</b></font>&nbsp;(e.hasMoreElements())&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m = (Message)e.nextElement();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<font color="#ff00ff">&quot;id:&nbsp;&nbsp;&nbsp;&nbsp;&quot;</font>&nbsp;+ m.getJMSMessageID());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<font color="#ff00ff">&quot;label: &quot;</font>&nbsp;+ m.getStringProperty(<font color="#ff00ff">&quot;label&quot;</font>));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<font color="#ff00ff">&quot;date:&nbsp;&nbsp;&quot;</font>&nbsp;+ (<font color="#a52829"><b>new</b></font>&nbsp;Date(m.getJMSTimestamp())));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<font color="#ff00ff">&quot;=============================================&quot;</font>);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#0000ff">// Dequeue all the messages on the queue</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MessageConsumer c = session.createConsumer(q);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#a52829"><b>while</b></font>&nbsp;(<font color="#ff00ff">true</font>)&nbsp;{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m = c.receiveNoWait();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#a52829"><b>if</b></font>&nbsp;(m == <font color="#ff00ff">null</font>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#a52829"><b>break</b></font>;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<font color="#ff00ff">&quot;id:&nbsp;&nbsp;&nbsp;&nbsp;&quot;</font>&nbsp;+ m.getJMSMessageID());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<font color="#ff00ff">&quot;label: &quot;</font>&nbsp;+ m.getStringProperty(<font color="#ff00ff">&quot;label&quot;</font>));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<font color="#ff00ff">&quot;date:&nbsp;&nbsp;&quot;</font>&nbsp;+ (<font color="#a52829"><b>new</b></font>&nbsp;Date(m.getJMSTimestamp())));<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<font color="#ff00ff">&quot;Text:&nbsp;&nbsp;&quot;</font>&nbsp;+ ((TextMessage)m).getText());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ctx.close();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}<br>
+<br>
+</span>
+
+<h3>License</h3>
+<pre>
+   Copyright 2005-2007 Matthew J. Battey
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       <a href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">http://www.apache.org/licenses/LICENSE-2.0</a>
+
+	Unless required by applicable law or agreed to in writing, software distributed
+	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+	CONDITIONS OF ANY KIND, either express or implied. See the License for the
+	specific language governing permissions and limitations under the License.
+
+
+This software implements a Java interface to SAFMQ (see http://safmq.sourceforge.net).
+</pre>
+
+
+@see com.safmq.MQBuilder
+@see com.safmq.MQConnection
+@see com.safmq.MessageQueue
+
+</body>
+</html>

@@ -1,0 +1,69 @@
+=============================================
+SAFMQ 0.9 Installation Instructions
+============================================
+
+Installation:
+	To Install SAFMQ do the following steps
+
+UNIX Installation:
+	1) Download the SAFMQ source tarbal OR zip
+	2) run:
+			./configure
+			make all
+			su
+			make install
+
+		NOTE: Use the --prefix option to configure to specify the install
+			location, the default is /usr/local (bin,lib,include)
+
+		NOTE: If your operating system is FreeBSD or a dirivative, please
+			use gmake instead of make.
+
+	3) Make a safmq.conf, there's one in the "sample" directory, put it in /etc or
+		where ever you like
+	4) Make directories for the queues and configuation data from your safmq.conf (these
+		may be the same directory)
+	5) Launch safmq, if you issue the "-D" parameter it will start in the background.
+
+Win32 Installation:
+	NOTE: to use SSL in Win32 situation, install OpenSSL on you system and
+		add the out32 (for libraries) and inc32 (for include files) directories to the
+		"Directories" tab in the VisualStudio "Options" dialog.
+
+	1) Download the SAFMQ source tarbal OR zip
+	2) Open safmq.dsw and build
+	3) Depending on the build selection, safmq.exe will be created, and safmqc.exe
+		will also be created.
+	4) copy safmq.exe and safmqc.exe to your favorite installation locations like
+		%SystemRoot%\system32 or where ever you like
+	5) Make a safmq.conf, there's one in the "sample" directory, put it in %SystemRoot%
+		(c:\windows) or where ever you like. (NOTE: If you plan to run SAFMQ as a service
+		putting safmq.conf in %SystemRoot% is essential).
+	6) Make directories for the queues and configuation data from your safmq.conf (these
+		may be the same directory)
+	7) Optionally Install the service
+	8) Run safmq by issuing the command "safmq".  If you've installed as a service, the
+		"-D" parameter will start the service, othewise it will run in the foreground.
+
+	- OR -
+
+	Download the binary distribution .MSI file and install directly.  You'll still need
+	to configure where you want your queue files, etc.
+
+Operation:	
+       -h,--help      : Show this information
+       -c cfg,
+       --config=cfg   : Use 'cfg' as the configuration file
+       -D,--daemon    : Start the program in the background
+
+In WinNT based platforms (WinNT, WinXP, Win2K, WIn2K3) only:
+       -i,--install   : Installs SAFMQ as a service
+       -r,--remove    : Uninstalls SAFMQ as a service
+
+Security Concerns:
+	NOTE: SAFMQ users and passwords are stored in plain text.  It is essential that
+		the directory specified by "config_dir" be readable only by the user running
+		safmq.
+
+
+

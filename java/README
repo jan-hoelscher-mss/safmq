@@ -1,0 +1,67 @@
+This is the README file for the SAFMQ Java API.
+
+SAFMQ Java API and Manager Version 0.6.0
+========================================
+SAFMQ may be accessed by Java implementations using the Java API.  
+The API supports a POJO interface as well as a JMS 1.1 interface.  
+The POJO interface is based on the "com.safmq.MQConnection" and 
+supporting classes.  While the JMS 1.1 interface supplies an 
+InitialContextFactory implementation allowing JMS integration.
+
+SAFMQ also supplies a Java GUI Application known as the SAFMQ 
+Manager.  This application allows you to define users, groups and 
+queues for multiple SAFMQ servers.  To utilize this feature you will 
+need both the SAFMQ Java API jar as well as the SAFMQ Manager jar in 
+your CLASSPATH (com.safmq.0.6.jar and com.safmq.manager.0.6.jar).
+
+
+Building the SAFMQ Java API & SAFMQ Java Manager
+========================================
+The SAFMQ Java API can be build with using the ANT tool (available at 
+http://ant.apache.org).  Building has occurred successfully using ANT 
+version 1.7, but previous versions should work as well.
+
+Steps to build the SAFMQ Java API:
+
+1)	Obtain the SAFMQ Java API source
+2)	Unpack the source from the delivery 
+3)	Execute ant
+a.	$ ant
+
+NOTE: SAFMQ Java API as of version 0.6.0 is dependent on the Java JMS 
+API interfaces version 1.1.  These are available from Sun 
+Microsystems (http://java.sun.com/products/jms/).  The JMS Java EE 
+JAR file must be in the CLASSPATH prior to invoking ANT or build 
+errors may occur.
+
+If you desire to build SAFMQ w/o JMS support execute the following 
+ANT command.
+
+	$ ant base
+
+This will build the basic SAFMQ Java API & Manager without JMS 1.1 
+support.
+
+OTHER ANT OPTIONS
+
+Other options for ANT builds include:
+	$ ant -Dverbose=true
+
+Which will cause verbose output from all build steps.
+
+
+SAFMQ JMS 1.0/1.1 API
+========================================
+SAFMQ Java API version 0.6.0 supplies a JMS 1.1 (and 1.0) compliant 
+driver.  Accessing SAFMQ servers through this API follows the JMS & 
+JNDI approach to ConnectionFactory and Queue discovery.  Access is 
+accomplished through Producers and Consumers.
+
+If full control of the SAFMQ Server is required the SAFMQ POJO 
+implementation is suggested, as it will all you to create queues, 
+users and groups as well as access queue data.
+
+Testing SAFMQ
+=======================================
+As of release 0.6.1, SAFMQ Java has a JUnit test suite that
+tests all of the major interfaces of the MQConnection.

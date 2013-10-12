@@ -1,0 +1,26 @@
+HKCR
+{
+	ActorPerms.ActorPerms.1 = s 'ActorPerms Class'
+	{
+		CLSID = s '{811AB173-A973-4541-BDC6-E3B48FF42B28}'
+	}
+	ActorPerms.ActorPerms = s 'ActorPerms Class'
+	{
+		CLSID = s '{811AB173-A973-4541-BDC6-E3B48FF42B28}'
+		CurVer = s 'ActorPerms.ActorPerms.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {811AB173-A973-4541-BDC6-E3B48FF42B28} = s 'ActorPerms Class'
+		{
+			ProgID = s 'ActorPerms.ActorPerms.1'
+			VersionIndependentProgID = s 'ActorPerms.ActorPerms'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{FE8599CE-A2A8-4103-A70A-64ADDE590CC8}'
+		}
+	}
+}

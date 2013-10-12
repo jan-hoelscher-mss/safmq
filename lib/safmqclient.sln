@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "safmqclient", "safmqclient.vcproj", "{D2465233-A474-4556-9DFA-D6F77B82C47E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7167F53A-972D-44E4-A571-84D40561DD66} = {7167F53A-972D-44E4-A571-84D40561DD66}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "safmqlib", "safmqlib.vcproj", "{7167F53A-972D-44E4-A571-84D40561DD66}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug Min Dependency|Win32 = Debug Min Dependency|Win32
+		Debug SSL Min Dependency|Win32 = Debug SSL Min Dependency|Win32
+		Debug SSL|Win32 = Debug SSL|Win32
+		Debug|Win32 = Debug|Win32
+		Release Min Dependency|Win32 = Release Min Dependency|Win32
+		Release SSL Min Dependency|Win32 = Release SSL Min Dependency|Win32
+		Release SSL|Win32 = Release SSL|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D2465233-A474-4556-9DFA-D6F77B82C47E}.Debug Min Dependency|Win32.ActiveCfg = Debug SSL|Win32
+		{D2465233-A474-4556-9DFA-D6F77B82C47E}.Debug Min Dependency|Win32.Build.0 = Debug SSL|Win32
+		{D2465233-A474-4556-9DFA-D6F77B82C47E}.Debug SSL Min Dependency|Win32.ActiveCfg = Debug SSL|Win32
+		{D2465233-A474-4556-9DFA-D6F77B82C47E}.Debug SSL Min Dependency|Win32.Build.0 = Debug SSL|Win32
+		{D2465233-A474-4556-9DFA-D6F77B82C47E}.Debug SSL|Win32.ActiveCfg = Debug SSL|Win32
+		{D2465233-A474-4556-9DFA-D6F77B82C47E}.Debug SSL|Win32.Build.0 = Debug SSL|Win32
+		{D2465233-A474-4556-9DFA-D6F77B82C47E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D2465233-A474-4556-9DFA-D6F77B82C47E}.Debug|Win32.Build.0 = Debug|Win32
+		{D2465233-A474-4556-9DFA-D6F77B82C47E}.Release Min Dependency|Win32.ActiveCfg = Release SSL|Win32
+		{D2465233-A474-4556-9DFA-D6F77B82C47E}.Release Min Dependency|Win32.Build.0 = Release SSL|Win32
+		{D2465233-A474-4556-9DFA-D6F77B82C47E}.Release SSL Min Dependency|Win32.ActiveCfg = Release SSL|Win32
+		{D2465233-A474-4556-9DFA-D6F77B82C47E}.Release SSL Min Dependency|Win32.Build.0 = Release SSL|Win32
+		{D2465233-A474-4556-9DFA-D6F77B82C47E}.Release SSL|Win32.ActiveCfg = Release SSL|Win32
+		{D2465233-A474-4556-9DFA-D6F77B82C47E}.Release SSL|Win32.Build.0 = Release SSL|Win32
+		{D2465233-A474-4556-9DFA-D6F77B82C47E}.Release|Win32.ActiveCfg = Release|Win32
+		{D2465233-A474-4556-9DFA-D6F77B82C47E}.Release|Win32.Build.0 = Release|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Debug Min Dependency|Win32.ActiveCfg = Debug Min Dependency|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Debug Min Dependency|Win32.Build.0 = Debug Min Dependency|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Debug SSL Min Dependency|Win32.ActiveCfg = Debug SSL Min Dependency|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Debug SSL Min Dependency|Win32.Build.0 = Debug SSL Min Dependency|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Debug SSL|Win32.ActiveCfg = Debug SSL|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Debug SSL|Win32.Build.0 = Debug SSL|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Debug|Win32.Build.0 = Debug|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Release Min Dependency|Win32.ActiveCfg = Release Min Dependency|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Release Min Dependency|Win32.Build.0 = Release Min Dependency|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Release SSL Min Dependency|Win32.ActiveCfg = Release SSL Min Dependency|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Release SSL Min Dependency|Win32.Build.0 = Release SSL Min Dependency|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Release SSL|Win32.ActiveCfg = Release SSL|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Release SSL|Win32.Build.0 = Release SSL|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Release|Win32.ActiveCfg = Release|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

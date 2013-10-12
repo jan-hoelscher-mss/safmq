@@ -1,0 +1,87 @@
+
+==============================================================================
+SAFMQ Version 0.8
+==============================================================================
+* Changed Mutex implementation on Win32 to lighter weight critical sections
+* Added ability to specify network interface bindings
+* X.509 identity management added to PHP interface
+* php_safmq PHP module added to main build, configurable via configure
+* changed safmq::MQConnection::RemoveUerIdentity() to
+	safmq::MQConnection::RemoveUserIdentity()
+* Rolled NT Event log message formats into build process, no need for a pre-built
+	MSG*.bin built by source now
+* Added a custom install handler to install the SAFMQ Windows service (no window pop)
+* Added ability to specify user account when installing SAFMQ Windows service
+* Fixed bug with SSL connections that affected JMS/SSL (set session id)
+* All JUnit tests now successfull (including JMS/SSL)
+* Fixed bug with 64 bit SAFMQ server that was sending a 64 bit timestamp instead
+	of the expected 32 bits
+* Added cppUnit unit tests for c++ interface
+* Added support to include stdint.h for 32 bit integer types
+* Ported to FreeBSD 6.1
+* Tested on FreeBSD 6.1, Fedora Core 1, Fedora Core 9, Cygwin, Win32
+* Refactored to command architecture, step 1 in move to connection/session support.
+* Added Visual Studio 2005 project files.
+
+
+==============================================================================
+SAFMQ 0.7.1 Release May 13, 2008
+==============================================================================
+* Java library only released, fixed build process that caused
+	Java SAFMQ manager to not be placed in the output jar file
+
+==============================================================================
+SAFMQ 0.7 Release May 13, 2008
+==============================================================================
+* Major performance improvements
+  - Tested at 12K messages/second on P4 3.4 GHZ (In HT mode) with SATA RAID-5 disk array.
+* PHP source folded into main source tree
+* Support for 64 bit Linux systems 
+
+
+==============================================================================
+SAFMQ 0.6.2 Release April 21, 2008
+==============================================================================
+* Folded PHP interface into main source distribution
+* Fixed compatibility with existing PHP C++ clients when compiled on 64 bit systems (introduced in 0.6.1)
+* Solidified 64 bit linux compilation and operation
+
+
+==============================================================================
+SAFMQ 0.6.1 Release April 20, 2008
+==============================================================================
++ Fixed bugs with 64 bit linux compilation
++ Added JUnit test suite for java interface
+
+==============================================================================
+SAFMQ 0.6 Release November 9, 2007
+==============================================================================
++ Added support for .Net
++ Added support for Java JMS
++ Added support for PHP
++ Added Windows MSI installer
+
+==============================================================================
+SAFMQ 0.5 Release April 12, 2006
+==============================================================================
++ Added "make install" for unix instalations
++ Added Transactions for Enqueu and Retrieve operations
++ Improved performace for TTL messages
++ Improved performace for forwarded messages
++ Various bug fixes
+
+==============================================================================
+SAFMQ 0.1.1 Release Dec 22, 2005
+==============================================================================
++Fixed pathing issues in Win32 compilations
++Added SSL support for unix-ish envoronments.
++Added ./configure configration script to determine
+	if SSL is available on this system (in unix-ish environments).
+
+==============================================================================
+SAFMQ 0.1 Release Dec 13, 2005
+==============================================================================
++Initial release of software
+
+
+

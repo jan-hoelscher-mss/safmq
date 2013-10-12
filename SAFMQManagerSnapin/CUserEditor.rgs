@@ -1,0 +1,34 @@
+HKCR
+{
+	LocalSettings.UserEditor.1 = s 'UserEditor Class'
+	{
+		CLSID = s '{0058631C-749D-41EB-86CD-11EFC20BCF06}'
+	}
+	LocalSettings.UserEditor = s 'UserEditor Class'
+	{
+		CLSID = s '{0058631C-749D-41EB-86CD-11EFC20BCF06}'
+		CurVer = s 'LocalSettings.UserEditor.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {0058631C-749D-41EB-86CD-11EFC20BCF06} = s 'UserEditor Class'
+		{
+			ProgID = s 'LocalSettings.UserEditor.1'
+			VersionIndependentProgID = s 'LocalSettings.UserEditor'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			ForceRemove 'Control'
+			ForceRemove 'Insertable'
+			ForceRemove 'ToolboxBitmap32' = s '%MODULE%, 104'
+			'MiscStatus' = s '0'
+			{
+			    '1' = s '131473'
+			}
+			'TypeLib' = s '{435C7349-73FC-4E0C-A9C8-230C5DD0E366}'
+			'Version' = s '1.0'
+		}
+	}
+}

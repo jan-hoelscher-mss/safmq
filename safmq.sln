@@ -1,0 +1,108 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SAFMQManagerSnapin", "SAFMQManagerSnapin\SAFMQManagerSnapin.vcproj", "{F7FBA1F1-0B8F-4C1D-A9C9-666A1051DDB1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7167F53A-972D-44E4-A571-84D40561DD66} = {7167F53A-972D-44E4-A571-84D40561DD66}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "safmq", "safmq.vcproj", "{9FFB49C6-90AB-478C-9E81-D5C6C05CA931}"
+	ProjectSection(ProjectDependencies) = postProject
+		{73CD68FF-0822-4822-929A-E163BD809BBB} = {73CD68FF-0822-4822-929A-E163BD809BBB}
+		{F7FBA1F1-0B8F-4C1D-A9C9-666A1051DDB1} = {F7FBA1F1-0B8F-4C1D-A9C9-666A1051DDB1}
+		{7167F53A-972D-44E4-A571-84D40561DD66} = {7167F53A-972D-44E4-A571-84D40561DD66}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "safmqc", "utilities\safmqc.vcproj", "{73CD68FF-0822-4822-929A-E163BD809BBB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7167F53A-972D-44E4-A571-84D40561DD66} = {7167F53A-972D-44E4-A571-84D40561DD66}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "safmqlib", "lib\safmqlib.vcproj", "{7167F53A-972D-44E4-A571-84D40561DD66}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "safmq_php_win32", "php_safmq\safmq_php_win32\safmq_php_win32.vcproj", "{3D61D70A-B474-4DC3-B242-35176BB17666}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7167F53A-972D-44E4-A571-84D40561DD66} = {7167F53A-972D-44E4-A571-84D40561DD66}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug Min Dependency|Win32 = Debug Min Dependency|Win32
+		Debug SSL Min Dependency|Win32 = Debug SSL Min Dependency|Win32
+		Debug SSL|Win32 = Debug SSL|Win32
+		Debug|Win32 = Debug|Win32
+		Release Min Dependency|Win32 = Release Min Dependency|Win32
+		Release SSL Min Dependency|Win32 = Release SSL Min Dependency|Win32
+		Release SSL|Win32 = Release SSL|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F7FBA1F1-0B8F-4C1D-A9C9-666A1051DDB1}.Debug Min Dependency|Win32.ActiveCfg = Debug|Win32
+		{F7FBA1F1-0B8F-4C1D-A9C9-666A1051DDB1}.Debug SSL Min Dependency|Win32.ActiveCfg = Debug SSL|Win32
+		{F7FBA1F1-0B8F-4C1D-A9C9-666A1051DDB1}.Debug SSL|Win32.ActiveCfg = Debug SSL|Win32
+		{F7FBA1F1-0B8F-4C1D-A9C9-666A1051DDB1}.Debug SSL|Win32.Build.0 = Debug SSL|Win32
+		{F7FBA1F1-0B8F-4C1D-A9C9-666A1051DDB1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F7FBA1F1-0B8F-4C1D-A9C9-666A1051DDB1}.Debug|Win32.Build.0 = Debug|Win32
+		{F7FBA1F1-0B8F-4C1D-A9C9-666A1051DDB1}.Release Min Dependency|Win32.ActiveCfg = Release|Win32
+		{F7FBA1F1-0B8F-4C1D-A9C9-666A1051DDB1}.Release SSL Min Dependency|Win32.ActiveCfg = Release SSL|Win32
+		{F7FBA1F1-0B8F-4C1D-A9C9-666A1051DDB1}.Release SSL|Win32.ActiveCfg = Release SSL|Win32
+		{F7FBA1F1-0B8F-4C1D-A9C9-666A1051DDB1}.Release SSL|Win32.Build.0 = Release SSL|Win32
+		{F7FBA1F1-0B8F-4C1D-A9C9-666A1051DDB1}.Release|Win32.ActiveCfg = Release|Win32
+		{F7FBA1F1-0B8F-4C1D-A9C9-666A1051DDB1}.Release|Win32.Build.0 = Release|Win32
+		{9FFB49C6-90AB-478C-9E81-D5C6C05CA931}.Debug Min Dependency|Win32.ActiveCfg = Debug|Win32
+		{9FFB49C6-90AB-478C-9E81-D5C6C05CA931}.Debug SSL Min Dependency|Win32.ActiveCfg = Debug SSL|Win32
+		{9FFB49C6-90AB-478C-9E81-D5C6C05CA931}.Debug SSL|Win32.ActiveCfg = Debug SSL|Win32
+		{9FFB49C6-90AB-478C-9E81-D5C6C05CA931}.Debug SSL|Win32.Build.0 = Debug SSL|Win32
+		{9FFB49C6-90AB-478C-9E81-D5C6C05CA931}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9FFB49C6-90AB-478C-9E81-D5C6C05CA931}.Debug|Win32.Build.0 = Debug|Win32
+		{9FFB49C6-90AB-478C-9E81-D5C6C05CA931}.Release Min Dependency|Win32.ActiveCfg = Release|Win32
+		{9FFB49C6-90AB-478C-9E81-D5C6C05CA931}.Release SSL Min Dependency|Win32.ActiveCfg = Release SSL|Win32
+		{9FFB49C6-90AB-478C-9E81-D5C6C05CA931}.Release SSL|Win32.ActiveCfg = Release SSL|Win32
+		{9FFB49C6-90AB-478C-9E81-D5C6C05CA931}.Release SSL|Win32.Build.0 = Release SSL|Win32
+		{9FFB49C6-90AB-478C-9E81-D5C6C05CA931}.Release|Win32.ActiveCfg = Release|Win32
+		{9FFB49C6-90AB-478C-9E81-D5C6C05CA931}.Release|Win32.Build.0 = Release|Win32
+		{73CD68FF-0822-4822-929A-E163BD809BBB}.Debug Min Dependency|Win32.ActiveCfg = Debug|Win32
+		{73CD68FF-0822-4822-929A-E163BD809BBB}.Debug SSL Min Dependency|Win32.ActiveCfg = Debug SSL|Win32
+		{73CD68FF-0822-4822-929A-E163BD809BBB}.Debug SSL|Win32.ActiveCfg = Debug SSL|Win32
+		{73CD68FF-0822-4822-929A-E163BD809BBB}.Debug SSL|Win32.Build.0 = Debug SSL|Win32
+		{73CD68FF-0822-4822-929A-E163BD809BBB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{73CD68FF-0822-4822-929A-E163BD809BBB}.Debug|Win32.Build.0 = Debug|Win32
+		{73CD68FF-0822-4822-929A-E163BD809BBB}.Release Min Dependency|Win32.ActiveCfg = Release|Win32
+		{73CD68FF-0822-4822-929A-E163BD809BBB}.Release SSL Min Dependency|Win32.ActiveCfg = Release SSL|Win32
+		{73CD68FF-0822-4822-929A-E163BD809BBB}.Release SSL|Win32.ActiveCfg = Release SSL|Win32
+		{73CD68FF-0822-4822-929A-E163BD809BBB}.Release SSL|Win32.Build.0 = Release SSL|Win32
+		{73CD68FF-0822-4822-929A-E163BD809BBB}.Release|Win32.ActiveCfg = Release|Win32
+		{73CD68FF-0822-4822-929A-E163BD809BBB}.Release|Win32.Build.0 = Release|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Debug Min Dependency|Win32.ActiveCfg = Debug Min Dependency|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Debug Min Dependency|Win32.Build.0 = Debug Min Dependency|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Debug SSL Min Dependency|Win32.ActiveCfg = Debug SSL Min Dependency|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Debug SSL Min Dependency|Win32.Build.0 = Debug SSL Min Dependency|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Debug SSL|Win32.ActiveCfg = Debug SSL|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Debug SSL|Win32.Build.0 = Debug SSL|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Debug|Win32.Build.0 = Debug|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Release Min Dependency|Win32.ActiveCfg = Release Min Dependency|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Release Min Dependency|Win32.Build.0 = Release Min Dependency|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Release SSL Min Dependency|Win32.ActiveCfg = Release SSL Min Dependency|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Release SSL Min Dependency|Win32.Build.0 = Release SSL Min Dependency|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Release SSL|Win32.ActiveCfg = Release SSL|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Release SSL|Win32.Build.0 = Release SSL|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Release|Win32.ActiveCfg = Release|Win32
+		{7167F53A-972D-44E4-A571-84D40561DD66}.Release|Win32.Build.0 = Release|Win32
+		{3D61D70A-B474-4DC3-B242-35176BB17666}.Debug Min Dependency|Win32.ActiveCfg = Debug|Win32
+		{3D61D70A-B474-4DC3-B242-35176BB17666}.Debug SSL Min Dependency|Win32.ActiveCfg = Debug SSL|Win32
+		{3D61D70A-B474-4DC3-B242-35176BB17666}.Debug SSL|Win32.ActiveCfg = Debug SSL|Win32
+		{3D61D70A-B474-4DC3-B242-35176BB17666}.Debug SSL|Win32.Build.0 = Debug SSL|Win32
+		{3D61D70A-B474-4DC3-B242-35176BB17666}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3D61D70A-B474-4DC3-B242-35176BB17666}.Debug|Win32.Build.0 = Debug|Win32
+		{3D61D70A-B474-4DC3-B242-35176BB17666}.Release Min Dependency|Win32.ActiveCfg = Release|Win32
+		{3D61D70A-B474-4DC3-B242-35176BB17666}.Release SSL Min Dependency|Win32.ActiveCfg = Release SSL|Win32
+		{3D61D70A-B474-4DC3-B242-35176BB17666}.Release SSL|Win32.ActiveCfg = Release SSL|Win32
+		{3D61D70A-B474-4DC3-B242-35176BB17666}.Release SSL|Win32.Build.0 = Release SSL|Win32
+		{3D61D70A-B474-4DC3-B242-35176BB17666}.Release|Win32.ActiveCfg = Release|Win32
+		{3D61D70A-B474-4DC3-B242-35176BB17666}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

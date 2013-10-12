@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "safmq_php_win32", "safmq_php_win32.vcproj", "{3D61D70A-B474-4DC3-B242-35176BB17666}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug SSL|Win32 = Debug SSL|Win32
+		Debug|Win32 = Debug|Win32
+		Release SSL|Win32 = Release SSL|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3D61D70A-B474-4DC3-B242-35176BB17666}.Debug SSL|Win32.ActiveCfg = Debug SSL|Win32
+		{3D61D70A-B474-4DC3-B242-35176BB17666}.Debug SSL|Win32.Build.0 = Debug SSL|Win32
+		{3D61D70A-B474-4DC3-B242-35176BB17666}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3D61D70A-B474-4DC3-B242-35176BB17666}.Debug|Win32.Build.0 = Debug|Win32
+		{3D61D70A-B474-4DC3-B242-35176BB17666}.Release SSL|Win32.ActiveCfg = Release SSL|Win32
+		{3D61D70A-B474-4DC3-B242-35176BB17666}.Release SSL|Win32.Build.0 = Release SSL|Win32
+		{3D61D70A-B474-4DC3-B242-35176BB17666}.Release|Win32.ActiveCfg = Release|Win32
+		{3D61D70A-B474-4DC3-B242-35176BB17666}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

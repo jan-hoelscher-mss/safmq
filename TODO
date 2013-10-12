@@ -1,0 +1,86 @@
+Things TODO for SAFMQ (in no particular order):
+
+* Develop a python interface
+* Develop a perl interface
+* Develop a COM (Win32) interface
+* Develop a ColdFusion CFML interface (COM may suffice)
+* Develop interface for listing queues and servers via LDAP
+* Develop interface to generate Server/Queue connection via LDAP data
+
+* Add support for GNU "autoconf"
+
+* Add logging
+	* Logging to a queue
+
+* Add JMS like Topic support (long-range issue)
+
+* Add support for shared connections (sessions)
+
+* Add queues in other directories (names with "/" or "." 
+	to designate directory grouping possibly)
+
+* Multiple Protocol version support via Command versioning
+* Command Queueing (Important for sessions)
+
+* Thread Pooling (Conserves thread resorces, possible with Command Queueing)
+
+* Forward thread count configuration: short term pre-pooling solution.
+
+==============================================================================
+Completed Tasks
+
+* Add Server statistics interface
+	* Login, queues, disk used, etc (done 12/18/2009)
+	* Queue File Cache hits/misses (via log file output)
+* Add Queue statistics interface	(done 12/18/2009)
+
+* Support for temporary queues (live the length of the connection/session) (done 12/1/2009)
+
+* Command architecture in ServiceThread (done 1/26/2009)
+
+* Add a windows instaler library to register and unregister SAFMQ Service (done 5/19/2008)
+* Add Install time SAFMQ Service user ID setup.
+
+* Add support for SSL certificate verification (done version 0.6)
+	* Allowing forwarding via allowed certs
+
+* Add support for custom address binding, to avoid binding (done 5/16/2008)
+	to all TCP/IP addresses
+
+* Add transactions to the PHP interface (done version 0.7)
+
+* Release PHP interface (done  11/2007)
+
+* Add JMS support to the Java package			(done 10/30/2007)
+	* Implement JNDI interfact to locate queues
+
+* Develop a Win32 installer package (8/18/2007)
+
+* Exe Version Info in Windows (8/30/2007)
+
+* Add logging (8/29/2007)
+	* Logging to NT Event Log (8/30/2007)
+	* Logging to sys log (8/30/2007)
+	* Logging to a file
+	* Configurable event logging
+		* Log sign-on events
+		* Log security changes
+		* Log user/group/queue creation/deletion
+		* Log TTL expirations
+
+* Add cache of opened queue files to enhance performance (8/27/2007)
+	* create queue file cache manager
+
+* Develop a .NET native interface (done 8/17/2007)
+
+* Windows install using full path to command causes problems(fixed 3/8/2006)
+
+* Mapping or direct use of SSL Subject DN to user (done, mapping, 9/6/2007)
+
+* Add SSL Support for unix systems (done 12/22/2005)
+
+* Add Transactions (done and tested 4/10/2005)
+
+* Add an install rule to the unix makefile (done and tested 4/12/2005)
+
+

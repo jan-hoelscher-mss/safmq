@@ -1,0 +1,34 @@
+README for PHP API for SAFMQ
+==================================
+
+Prerequisites
+==================================
+
+Please have the following installed before building and 
+installing the SAFMQ API for PHP.
+
+	1.	PHP Version 5.x built and installed
+	2.	SAFMQ built (does not need to be installed only compiled)
+
+Build Instructions
+==================================
+
+	2.  In the php_safmq directory of the SAFMQ distro execute the command:
+		$ phpize
+
+	3.	Then in the same directory execute the command:
+		$ ./configure
+
+	4.	Next build the project with the command:
+		$ make
+
+	4.	Install the project with the command:
+		$ make install
+
+Documentation
+==================================
+
+Documentation for the PHP API for SAFMQ can be found at:
+
+	http://safmq.sourceforge.net/documentation.htm
+

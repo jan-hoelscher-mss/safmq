@@ -1,0 +1,474 @@
+#!/bin/sh
+
+#Param 1:	expression
+#Param 2:	library
+#Param 3:	compile type
+#param 4:	include
+test_avail()
+{
+	CODE="$1"
+	LIB="$2"
+	INCLUDE="$4"
+
+	if [ "$3" = "" ]; then
+		TYPE=c
+	else
+		TYPE=$3
+	fi
+
+	(
+		echo -e "$4";
+		echo -e "int main() { $1; return 0;}";
+	) | gcc -x $TYPE - $2 -o .test >/dev/null 2>/dev/null
+	good=$?
+	rm -f .test
+	return $good
+}
+
+test_php_avail()
+{
+	phpize --help >/dev/null 2>/dev/null
+	if [ $? = "0" ]; then
+		return 1
+	fi
+	return 0
+}
+
+test_posix_hwaddr()
+{
+#gcc -x $TYPE - $2 -o .test >/dev/null 2>/dev/null << EOT++
+(	gcc -x $TYPE - $2 -o .test << EOT
+// Test program to determine if the hardwar address can be determined in a posix manner
+#include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <net/if.h>
+#include <string.h>
+
+int main() {
+	struct ifreq ifr;
+	struct ifreq *IFR;
+	struct ifconf ifc;
+	char buf[1024];
+	int s, i;
+	int ok = 0;
+	
+	s = socket(AF_INET, SOCK_DGRAM, 0);
+	if (s==-1) {
+		return -1;
+	}
+
+	ifc.ifc_len = sizeof(buf);
+	ifc.ifc_buf = buf;
+	ioctl(s, SIOCGIFCONF, &ifc);
+
+	IFR = ifc.ifc_req;
+
+	for (i = ifc.ifc_len / sizeof(struct ifreq); --i >= 0; IFR++) {
+		strcpy(ifr.ifr_name, IFR->ifr_name);
+		if (ioctl(s, SIOCGIFFLAGS, &ifr) == 0) {
+			if (! (ifr.ifr_flags & IFF_LOOPBACK)) {
+				if (ioctl(s, SIOCGIFHWADDR, &ifr) == 0) {
+					ok = 1;
+					break;
+				}
+			}
+		}
+	}
+
+	close(s);
+	return 0;
+}
+
+EOT
+) >/dev/null 2>&1
+
+	good=$?
+	rm -f .test
+	return $good
+}
+
+
+
+
+HELP=0
+USESSL=1
+USECRYPTO=0
+CUSTOM_GETOPT=0
+TIME_ZONE__=0
+FREE_BSD_TIMEZONE=0
+POSIX_HWADDR=0
+FREEBSD_GETIFADDRS=0
+
+SSLLOC=""
+PREFIX="/usr/local"
+CONFIG_DIR="/etc"
+BIN_PREFIX=""
+LIB_PREFIX=""
+INC_PREFIX=""
+ADD_INCLUDE=""
+WITH_fPIC=""
+WITH_COMPILE_OPTION=""
+WITH_LINK_OPTION=""
+WITH_PHP="1"
+WITH_DEBUG=""
+WITH_OPTIMIZATION="-O2"
+
+while [ "$1" != "" ]; do
+	PARAM="$1"
+	case "$PARAM" in
+		--with-custom-getopt)
+			CUSTOM_GETOPT=1
+		;;
+
+		--without-ssl)
+			USESSL=0
+		;;
+
+		--help)
+			HELP=1
+		;;
+		-h)
+			HELP=1
+		;;
+		--with-include-dir=*)
+			ADD_INCLUDE="$ADD_INCLUDE `echo $PARAM |sed -e 's/--with-include-dir=//g'`"
+		;;
+		--ssl-location=*)
+			SSLLOC="-L`echo $PARAM |sed -e 's/--ssl-location=//g'`"
+		;;
+		--prefix=*)
+			PREFIX="`echo $PARAM |sed -e 's/--prefix=//g'`"
+		;;
+		--bin-prefix=*)
+			BIN_PREFIX="`echo $PARAM |sed -e 's/--bin-prefix=//g'`"
+		;;
+		--lib-prefix=*)
+			LIB_PREFIX="`echo $PARAM |sed -e 's/--lib-prefix=//g'`"
+		;;
+		--include-prefix=*)
+			INC_PREFIX="`echo $PARAM |sed -e 's/--include-prefix=//g'`"
+		;;
+		--config-dir=*)
+			CONFIG_DIR="`echo $PARAM |sed -e 's/--config-dir=//g'`"
+		;;
+		--without-php_safmq)
+			WITH_PHP="0"
+		;;
+		--with-fPIC)
+			WITH_fPIC=" -fPIC "
+		;;
+		--with-compile-option=*)
+			echo "Adding Compile Option" `echo $PARAM |sed -e 's/--with-compile-option=//g'` 
+			WITH_COMPILE_OPTION="$WITH_COMPILE_OPTION `echo $PARAM |sed -e 's/--with-compile-option=//g'`"
+		;;
+		--with-link-option=*)
+			WITH_LINK_OPTION="$WITH_LINK_OPTION `echo $PARAM |sed -e 's/--with-link-option=//g'`"
+		;;
+		--with-debug)
+			WITH_DEBUG="-g"
+			WITH_OPTIMIZATION="-O0"
+		;;
+		*)
+			echo "Option Not understood: " $PARAM;
+			exit 1
+		;;
+	esac
+	shift
+done 
+
+if [ "$BIN_PERFIX" = "" ]; then
+	BIN_PREFIX="$PREFIX/bin"
+fi
+if [ "$LIB_PERFIX" = "" ]; then
+	LIB_PREFIX="$PREFIX/lib"
+fi
+if [ "$INC_PERFIX" = "" ]; then
+	INC_PREFIX="$PREFIX/include"
+fi
+
+
+if [ $HELP = 1 ]; then
+	echo SAFMQ Configureation utility usage:
+	echo "    ./configure [options]"
+	echo
+	echo Options:
+	echo "   --help,-h                       : Show this page"
+	echo "   --without-ssl                   : Disables SSL integration"
+	echo "   --ssl-location=<dir>            : Location of SSL libraries if not in a standard location"
+	echo "   --with-custom-getopt            : Force use custom comand line processing"
+	echo "   --with-include-dir=<dir>        : Add a directory to the include path, may be repeated"
+	echo
+	echo "   --prefix=<dir>                  : Set the install base, defaults to /usr/local"
+	echo "   --bin-prefix=<dir>              : Set the install binary location, defaults to [prefix]/bin"
+	echo "   --lib-prefix=<dir>              : Set the install libary location, defaults to [prefix]/lib"
+	echo "   --include-prefix=<dir>          : Set the install header location, defaults to [prefix]/include"
+	echo
+	echo "   --config-dir=<dir>              : Set the location of the safmq.conf file defaults to /etc"
+	echo
+	echo "   --with-fPIC                     : Add the -fPIC flag to the code compliation (needed on some systems)"
+	echo "   --with-compile-option=<option>  : Add pass the listed flag to the compiler stage (may be repeated)"
+	echo "   --with-link-option=<option>     : Add pass the listed flag to the linker (may be repeated)"
+	echo "   --without-php_safmq             : Do not automatically build the php client library"
+	echo
+	echo "   --with-debug                    : Add debugging symbols and turnoff code optimizations"
+	echo
+else
+	echo "Performing configuration for safmq:"
+
+	echo "Binary Install Locaiton:     $BIN_PREFIX"
+	echo "Library Install Location:    $LIB_PREFIX"
+	echo "C++ Header Install Location: $INC_PREFIX"
+
+
+
+	echo -n "g++ available: ";
+	GPP_VER=`g++ -dumpversion`
+	if [ $? = 0 ]; then
+		echo "yes";
+		echo -n "g++ version: " $GPP_VER;
+		MAG_VER=`echo $GPP_VER | cut -d. -f1`;
+		if [ $MAG_VER -lt 3 ]; then
+			echo " -- g++ version newer than 3.x needed for C++ namespace support, you may experience issues compiling 4.x preferred";
+		else
+			echo;
+		fi
+	else
+		echo "no";
+	fi
+	
+	
+
+
+	################################################
+	# Test PHP availability
+
+	if [ "$WITH_PHP" != "0" ]; then
+		test_php_avail
+		if [ $? = 0 ]; then
+			WITH_PHP="0"
+		fi
+	fi
+	echo -n "PHP Client: "; if [ "$WITH_PHP" != "0" ]; then echo "yes"; else echo "no"; fi
+
+	################################################
+	# Test the avilability of _timezone or __timezone
+	echo -n "_timezone: "
+	test_avail "_timezone" "" "" "#include <time.h>" 
+	if [ $? != 0 ]; then
+		test_avail "__timezone" "" "" "#include <time.h>" 
+		if [ $? = 0 ] ; then
+			echo "yes, __timezone"
+			TIME_ZONE__=1
+		else
+
+			test_avail "struct tm *lt; lt->tm_gmtoff;" "" "" "#include <time.h>"
+			if [ $? = 0 ]; then
+				echo "no, using FreeBSD tm_gmtoff"
+				FREE_BSD_TIMEZONE=1
+			else
+				echo "no"
+				echo "Unable to continue, _timezone required for use"
+				exit
+			fi
+		fi
+	else
+		echo "yes"
+	fi
+
+	################################################
+	# Test the avilability of getopt_long()
+	echo -n "getopt_long: "
+	if [ $CUSTOM_GETOPT = 0 ]; then 
+		test_avail "getopt_long()"
+		if [ $? != 0 ]; then
+			CUSTOM_GETOPT=1
+		fi
+	fi
+
+	if [ $CUSTOM_GETOPT = 0 ]; then
+		echo "yes, native"
+	else
+		echo "yes, custom"
+	fi
+
+
+	################################################
+	# Test the avilability of SSL
+	echo -n "Open SSL: "
+
+	if [ $USESSL = 1 ]; then
+		test_avail "SSL_CTX_new(); BIO_free(); ERR_print_errors_cb()" "-lssl"
+		if [ $? = 1 ]; then
+			test_avail "SSL_CTX_new(); BIO_free(); ERR_print_errors_cb()" "-lssl -lcrypto"
+			if [ $? = 1 ]; then
+				USESSL=0
+				echo "no, Open SSL 0.9.7 or newer, required for SSL operation"
+			else
+				USECRYPTO=1
+				echo "yes, using libssl w/ libcrypto"
+			fi
+		else
+			echo "yes, using libssl"
+		fi
+	else
+		echo "no";
+	fi
+
+	################################################
+	# Test the availability of POSIX SIOCGIFHWADDR
+	echo -n "UUID: "
+	test_posix_hwaddr
+	if [ "$?" = 0 ]; then
+		echo SIOCGIFHWADDR available for MAC lookup
+		POSIX_HWADDR=1
+	else
+		echo POSIX interface not found
+	fi
+
+	echo -n "getifaddrs: "
+	test_avail "struct ifaddrs* addrs; getifaddrs(&addrs);" "" "" "#include <sys/types.h>\n#include <sys/socket.h>\n#include <ifaddrs.h>"
+	if [ $? = 0 ]; then
+		FREEBSD_GETIFADDRS=1
+		echo yes, using
+	else
+		echo no
+	fi
+
+	USE_STDINT=0
+	USE_INTTYPES=0
+	echo -n "stdint.h works: "
+	test_avail "uint32_t i" "" "" "#include <stdint.h>"
+	if [ $? = 0 ]; then
+		USE_STDINT=1
+		echo "yes, using"
+	else
+		echo "no"
+
+		echo -n "inttypes.h works: "
+		test_avail "uint32_t i" "" "" "#include <inttypes.h>"
+		if [ $? = 0 ]; then
+			USE_INTTYPES=1
+			echo "yes"
+		else
+			echo "no"
+		fi
+	fi
+
+
+	################################################
+	# Begin Building the makefile configuraiton file
+
+
+	echo "##################################################################" > makefile.in
+	echo "# makefile.in -- generated file changes may be lost if regenerated" >> makefile.in 
+	echo "#" >> makefile.in 
+	echo "# command line:" >> makefile.in
+	echo "# ./configure $@" >> makefile.in
+	echo >> makefile.in 
+	echo >> makefile.in 
+	echo >> makefile.in 
+	echo "INS_PREFIX=$PREFIX" >> makefile.in
+	echo "INS_BIN_DIR=$BIN_PREFIX" >> makefile.in
+	echo "INS_LIB_DIR=$LIB_PREFIX" >> makefile.in
+	echo "INS_INC_DIR=$INC_PREFIX" >> makefile.in
+	echo >> makefile.in 
+
+	if [ "$WITH_PHP" != "0" ]; then
+		echo "PHP_SAFMQ_TARGET=.php_safmq_lib" >> makefile.in
+		echo "PHP_SAFMQ_CLEAN_TARGET=php_safmq_lib_clean" >> makefile.in
+		echo >> makefile.in
+	else
+		echo "PHP_SAFMQ_TARGET=" >> makefile.in
+		echo "PHP_SAFMQ_CLEAN_TARGET=" >> makefile.in
+		echo >> makefile.in
+	fi
+
+	
+	echo "# Optimization and Debug settings" >> makefile.in
+	echo "CFLAGS += $WITH_DEBUG $WITH_OPTIMIZATION " >> makefile.in
+
+	if [ "$USE_STDINT" = 1 ]; then	
+		echo "# Use <stdint.h> header" >> makefile.in
+		echo "CFLAGS += -DSAFMQ_USE_STDINT -DUUID_USE_STDINT " >> makefile.in
+	fi
+
+	if [ "$USE_INTTYPES" = 1 ]; then	
+		echo "# Use <inttypes.h> header" >> makefile.in
+		echo "CFLAGS += -DSAFMQ_USE_INTTYPES -DUUID_USE_INTTYPES " >> makefile.in
+	fi
+
+	if [ "$WITH_fPIC" != "" ]; then
+		echo "# -fPIC flag activated by command line parameter" >> makefile.in
+		echo "CFLAGS += $WITH_fPIC" >> makefile.in
+		echo >> makefile.in 
+	fi
+
+	if [ "$WITH_COMPILE_OPTION" != "" ]; then
+		echo "# Command Options added by command line parameter" >> makefile.in
+		echo "CFLAGS +=$WITH_COMPILE_OPTION" >> makefile.in
+		echo >> makefile.in 
+	fi
+
+	if [ "$WITH_LINK_OPTION" != "" ]; then
+		echo "# Command Options added by command line parameter"
+		echo "LDFLAGS +=$WITH_LINK_OPTION" >> makefile.in
+		echo >> makefile.in 
+	fi
+
+	echo "CFLAGS += -DCONFIG_DIR='\"$CONFIG_DIR\"'" >> makefile.in
+	echo >> makefile.in 
+
+	if [ $USESSL = 1 ]; then
+		echo "# SSL Settings" >> makefile.in
+		echo "CFLAGS += -DSAFMQ_SSL" >> makefile.in
+		echo "OBJS += \$(DEST)/SSLServerThread.o" >> makefile.in
+		echo "LIB_OBJS += \$(DEST)/sslsocket.o \$(DEST)/SSLLockingPthread.o" >> makefile.in
+		echo "LDFLAGS += $SSLLOC -lssl" >> makefile.in
+		if [ $USECRYPTO = 1 ]; then
+			echo "LDFLAGS += -lcrypto" >> makefile.in
+		fi
+
+		echo 'PHP_VARS=CFLAGS=-DSAFMQ_SSL CPPFLAGS=-DSAFMQ_SSL CXXFLAGS=-DSAFMQ_SSL' >> makefile.in
+		echo >> makefile.in
+	else
+		echo 'PHP_VARS=""' >> makefile.in
+	fi
+
+	if [ $CUSTOM_GETOPT = 1 ]; then
+		echo "# GETOPT Settings" >> makefile.in
+		echo "CFLAGS += -DSAFMQ_GETOPT" >> makefile.in
+		echo >> makefile.in
+	fi
+
+	if [ $TIME_ZONE__ = 1 ]; then
+		echo "# Two Underbar timezone" >> makefile.in
+		echo "CFLAGS += -D_timezone=__timezone" >> makefile.in
+		echo >> makefile.in
+	fi
+
+	if [ $FREE_BSD_TIMEZONE = 1 ]; then
+		echo "# FreeBSD _timezone hack" >> makefile.in
+		echo "CFLAGS += -DUSE_FREEBSD_TIMEZONE" >> makefile.in
+		echo >> makefile.in
+	fi
+
+	if [ "$ADD_INCLUDE" != "" ]; then
+		echo "# additional include directories" >> makefile.in
+		for i in $ADD_INCLUDE; do
+			echo "Adding supplemental include directory: " $i
+			echo "CFLAGS += -I$i" >> makefile.in
+		done
+	fi
+
+	if [ "$POSIX_HWADDR" = 1 ]; then
+		echo "# The MAC address can be determined using POSIX interfaces" >> makefile.in
+		echo "CFLAGS += -DSAFMQ_POSIX_HWADDR" >> makefile.in
+		echo >> makefile.in
+	elif [ "$FREEBSD_GETIFADDRS" = 1 ]; then
+		echo "# The MAC address can be determined using POSIX interfaces" >> makefile.in
+		echo "CFLAGS += -DFREEBSD_GETIFADDRS" >> makefile.in
+		echo >> makefile.in
+	fi
+fi

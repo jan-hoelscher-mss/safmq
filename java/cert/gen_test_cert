@@ -1,0 +1,42 @@
+#!/bin/bash
+
+SN="safmq_java_test"
+NAME="Safmq Java Test Client"
+ROLE="Testing"
+
+SUBJ="/OU=$ROLE/O=$NAME"
+echo "Subject: \'"$SUBJ"\'"
+
+cp ../../sample/sample_cert.pem .
+cp ../../sample/sample_key.pem .
+echo "0001" >  sample_cert.srl
+
+echo "Generating new DSA Key"
+openssl req -newkey dsa:params.dsa -keyout key.pem -nodes -days 3654 -out cert.pem -set_serial 0 -subj "$SUBJ"
+
+echo "Generating new X.509 Certificate Subject: '$SUBJ'"
+openssl x509 -req -days 3654 -CA sample_cert.pem -CAkey sample_key.pem -in cert.pem -text  > $SN.pem
+
+echo >> $SN.pem
+echo "DSA Traditional Key:" >> $SN.pem
+cat key.pem >> $SN.pem
+
+echo "Creating PKCS#8 format key for Java support"
+echo >> $SN.pem
+echo "PKCS#8 Key:" >> $SN.pem
+openssl pkcs8 -topk8 -nocrypt -inform PEM -outform PEM -in key.pem  >> $SN.pem
+
+echo "Calling CertMan to install the key and certificate"
+java -cp certman.jar -Dop=add -Dtype=pem -Dcert=$SN.pem -Dalias=$SN CertMan $SN.jks
+
+echo "Creating simple certificate for Key Tool"
+openssl x509 -in sample_cert.pem > simple_sample_cert.pem
+
+echo "Using Key Tool to import the sample SAFMQ Server Certificate"
+keytool -keypass "" -storepass "" -keystore $SN.jks -import -alias safmq-ca -noprompt -file simple_sample_cert.pem
+
+echo "Creating a PKCS12 certificate store for .NET support"
+openssl pkcs12 -export -out ../../safmq.net/safmq.net.test/sample.p12 -in $SN.pem -inkey $SN.pem
+
+#rm cert.pem key.pem
+

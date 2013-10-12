@@ -1,0 +1,57 @@
+HKLM 
+{
+	NoRemove Software
+	{
+		NoRemove Microsoft
+		{
+			NoRemove MMC
+			{
+				NoRemove Snapins
+				{
+					ForceRemove {0DF95F22-6E5A-4596-B51E-F9BF3EFEEDAA} =
+						s 'SAFMQManagerRoot' 
+					{
+						val NameString = s 'SAFMQ Manager'
+						val About = s '{0A39EF51-B991-45BD-B6A2-6850FE1EE580}'
+						NodeTypes
+						{
+							{21F436D0-53D5-4C85-8BEA-E262741628EB}
+						}
+						StandAlone
+					}
+				}
+				NoRemove NodeTypes
+				{
+					ForceRemove {21F436D0-53D5-4C85-8BEA-E262741628EB}
+					{
+					}
+				}
+			}
+		}
+	}
+}
+HKCR
+{
+	SAFMQManagerRoot.SAFMQManagerRoot.1 = s 'SAFMQManagerRoot Class'
+	{
+		CLSID = s '{0DF95F22-6E5A-4596-B51E-F9BF3EFEEDAA}'
+	}
+	SAFMQManagerRoot.SAFMQManagerRoot = s 'SAFMQManagerRoot Class'
+	{
+		CLSID = s '{0DF95F22-6E5A-4596-B51E-F9BF3EFEEDAA}'
+		CurVer = s 'SAFMQManagerRoot.SAFMQManagerRoot.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {0DF95F22-6E5A-4596-B51E-F9BF3EFEEDAA} = s 'SAFMQManagerRoot Class'
+		{
+			ProgID = s 'SAFMQManagerRoot.SAFMQManagerRoot.1'
+			VersionIndependentProgID = s 'SAFMQManagerRoot.SAFMQManagerRoot'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			'TypeLib' = s '{FE8599CE-A2A8-4103-A70A-64ADDE590CC8}'
+		}
+	}
+}

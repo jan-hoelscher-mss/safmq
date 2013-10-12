@@ -1,0 +1,195 @@
+/*
+ Copyright 2005 Matthew J. Battey
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software distributed
+	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+	CONDITIONS OF ANY KIND, either express or implied. See the License for the
+	specific language governing permissions and limitations under the License.
+
+
+
+
+This software implements a platform independent Store and Forward Message Queue.
+*/
+// SAFMQ Manager Snapin.idl : IDL source for SAFMQ Manager Snapin.dll
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (SAFMQ Manager Snapin.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+#include "olectl.h"
+	
+
+[
+	uuid(FE8599CE-A2A8-4103-A70A-64ADDE590CC8),
+	version(1.0),
+	helpstring("SAFMQ Manager Snapin 1.0 Type Library")
+]
+library SAFMQMANAGERSNAPINLib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	// SAFMQ MMC Snap-in Static NODE interfaces
+	[
+		uuid(0DF95F22-6E5A-4596-B51E-F9BF3EFEEDAA),
+		helpstring("SAFMQManagerRoot Class")
+	]
+	coclass SAFMQManagerRoot
+	{
+		[default] interface IUnknown;
+	}
+
+
+
+	// SAFMQ MMC Snap-in ABOUT interface
+	[
+		uuid(0A39EF51-B991-45BD-B6A2-6850FE1EE580),
+		helpstring("SAFMQManagerRoot Class About")
+	]
+	coclass SAFMQManagerRootAbout
+	{
+		[default] interface IUnknown;
+	}
+
+
+
+
+	// LOCAL SETTINGS Interfaces
+	[
+		object,
+		uuid(9925B145-2FFF-4AF4-9D05-8F0D780DE907),
+		dual,
+		helpstring("ISAFMQLocalSettingsEditor Interface"),
+		pointer_default(unique)
+	]
+	interface ISAFMQLocalSettingsEditor : IDispatch
+	{
+	};
+	[
+		uuid(6507769E-8DF7-4956-9A3D-85EDFE9951A7),
+		helpstring("SAFMQLocalSettingsEditor Class")
+	]
+	coclass SAFMQLocalSettingsEditor
+	{
+		[default] interface ISAFMQLocalSettingsEditor;
+	};
+	
+
+
+
+
+	// USER EDITOR Interfaces
+	[
+		object,
+		uuid(6893BBA0-C583-4C69-8232-D3929A7C88E8),
+		dual,
+		helpstring("IUserEditor Interface"),
+		pointer_default(unique)
+	]
+	interface IUserEditor : IDispatch
+	{
+		[id(1), helpstring("method Initialize")] HRESULT Initialize([in] BSTR username, [in] BSTR description, [in] BOOL modifyUsers, [in] BOOL modifyGroups, [in] BOOL modifyQueues, [in] VARIANT groupList);
+	};
+	[
+		uuid(A2565F88-CC18-41a5-A51A-B185399D5CB8),
+		helpstring("_IUserEditorEvents Interface")
+	]
+	dispinterface _IUserEditorEvents
+	{
+		properties:
+		methods:
+		[id(1), helpstring("method ChangePassword")] HRESULT ChangePassword([in] BSTR newPassword);
+		[id(2), helpstring("method ApplyChanges")] HRESULT ApplyChanges([in] BOOL modifyUsers, [in] BOOL modifyGroups, [in] BOOL modifyQueues, [in] VARIANT groupList);
+		[id(3), helpstring("method GetAvailableGroups")] HRESULT GetAvailableGroups([out, retval] VARIANT* groupList);
+	};
+	[
+		uuid(0058631C-749D-41EB-86CD-11EFC20BCF06),
+		helpstring("UserEditor Class")
+	]
+	coclass UserEditor
+	{
+		[default] interface IUserEditor;
+		[default, source] dispinterface _IUserEditorEvents;
+	};
+
+
+
+
+
+	// GROUP EDITOR INTERFACES
+	[
+		object,
+		uuid(745F1E4E-E96D-4240-AA9D-237522669B28),
+		dual,
+		helpstring("IGroupEditor Interface"),
+		pointer_default(unique)
+	]
+	interface IGroupEditor : IDispatch
+	{
+		[id(1), helpstring("method Initialize")] HRESULT Initialize([in] BSTR groupname, [in] BOOL modifyUsers, [in] BOOL modifyGroups, [in] BOOL modifyQueues, [in] VARIANT userList);
+	};
+	[
+		uuid(AD87BB7D-D708-4f07-BDF2-94B783E28E23),
+		helpstring("_IGroupEditorEvents Interface")
+	]
+	dispinterface _IGroupEditorEvents
+	{
+		properties:
+		methods:
+		[id(1), helpstring("method ApplyChanges")] HRESULT ApplyChanges([in] BOOL modifyUsers, [in] BOOL modifyGroups, [in] BOOL modifyQueues, [in] VARIANT userList);
+		[id(2), helpstring("method GetAvailableUsers")] HRESULT GetAvailableUsers([out, retval] VARIANT* userList);
+	};
+	[
+		uuid(D7E8D2B8-BE9C-460C-8F0D-60341708A679),
+		helpstring("GroupEditor Class")
+	]
+	coclass GroupEditor
+	{
+		[default] interface IGroupEditor;
+		[default, source] dispinterface _IGroupEditorEvents;
+	};
+
+
+
+
+
+
+
+	[
+		object,
+		uuid(2F146882-AB67-432D-A722-6419B3F7856C),
+		dual,
+		helpstring("IActorPerms Interface"),
+		pointer_default(unique)
+	]
+	interface IActorPerms : IDispatch
+	{
+		[propget, id(1), helpstring("property Name")] HRESULT Name([out, retval] BSTR *pVal);
+		[propput, id(1), helpstring("property Name")] HRESULT Name([in] BSTR newVal);
+		[propget, id(2), helpstring("property Type")] HRESULT Type([out, retval] long *pVal);
+		[propput, id(2), helpstring("property Type")] HRESULT Type([in] long newVal);
+		[propget, id(3), helpstring("property ModifyGroups")] HRESULT ModifyGroups([out, retval] BOOL *pVal);
+		[propput, id(3), helpstring("property ModifyGroups")] HRESULT ModifyGroups([in] BOOL newVal);
+		[propget, id(4), helpstring("property ModifyUsers")] HRESULT ModifyUsers([out, retval] BOOL *pVal);
+		[propput, id(4), helpstring("property ModifyUsers")] HRESULT ModifyUsers([in] BOOL newVal);
+		[propget, id(5), helpstring("property ModifyQueues")] HRESULT ModifyQueues([out, retval] BOOL *pVal);
+		[propput, id(5), helpstring("property ModifyQueues")] HRESULT ModifyQueues([in] BOOL newVal);
+	};
+	[
+		uuid(811AB173-A973-4541-BDC6-E3B48FF42B28),
+		helpstring("ActorPerms Class")
+	]
+	coclass ActorPerms
+	{
+		[default] interface IActorPerms;
+	};
+};
