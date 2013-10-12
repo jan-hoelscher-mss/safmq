@@ -1,10 +1,14 @@
+cmake_minimum_required(VERSION 2.8)
 project (safmq)
+
 set(CMAKE_VERBOSE_MAKEFILE On)
 SET(BUILD_SHARED_LIBS Off)
 include_directories (.)
 include_directories (./shared)
 
-add_library (safmq
+#add_library (safmq
+SET(SAFMQ_SOURCE
+    ${SAFMQ_SOURCE}
 	Signal.cpp 
 	SystemDelivery.cpp 
 	Log.cpp 
@@ -66,9 +70,24 @@ ELSEIF(WIN32)
 
 	ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS )
 	ADD_DEFINITIONS(-D_SCL_SECURE_NO_WARNINGS )
-ENDIF(LINUX)
+ENDIF(UNIX AND NOT APPLE)
 
 target_link_libraries (safmq ${EXTRA_LIBS})
+
+INSTALL(TARGETS safmq
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION lib
+    ARCHIVE DESTINATION lib
+)
+FILE(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
+INSTALL(FILES ${files} DESTINATION include) 
+
+FILE(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/lib/*.h")
+INSTALL(FILES ${files} DESTINATION include/lib) 
+
+FILE(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/shared/tcpsocket/*.h")
+INSTALL(FILES ${files} DESTINATION include/shared/tcpsocket)
+            
 
 
 
