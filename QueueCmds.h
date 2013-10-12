@@ -523,7 +523,7 @@ public:
 			response.errorcode = theQueueManager->CreateQueue(response.queueName, service->getUsername(), true, true);
 			if (response.errorcode == EC_NOERROR) {
 				SecurityControl::getSecurityControl()->setInitialQueueControl(service->getUsername(), response.queueName);
-				SecurityControl::getSecurityControl()->setQAccessControlGroup(service->getUsername(), response.queueName, safmq_all_users, QAccessControl(false,true,false,false));
+				SecurityControl::getSecurityControl()->setQAccessControlGroup(service->getUsername(), response.queueName, "safmq_all_users", QAccessControl(false,true,false,false));
 
 
 				QStorage* pqueue = theQueueManager->GetQueue(response.queueName);
