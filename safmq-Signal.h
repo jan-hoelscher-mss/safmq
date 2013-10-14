@@ -20,6 +20,7 @@ This software implements a platform independent event-signal class.
 #if !defined(_SAFMQ_SIGNAL_H_)
 #define _SAFMQ_SIGNAL_H_
 
+#include <stdint.h>
 struct signalData;
 
 class Signal  

@@ -17,6 +17,7 @@
 
 This software implements a platform independent Store and Forward Message Queue.
 */
+#include <stdint.h>
 #include "main.h"
 #include "SystemDelivery.h"
 #include "lib/MQFactory.h"
