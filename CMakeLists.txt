@@ -54,6 +54,7 @@ ELSEIF(WIN32)
 ENDIF(NOT WIN32)
 add_library (safmq ${SAFMQ_SOURCE})
 
+ADD_DEFINITIONS(-fPIC)
 IF(UNIX AND NOT APPLE)
 	ADD_DEFINITIONS(-DCONFIG_DIR="")
 	ADD_DEFINITIONS(-DCONFIG_ENV="\\"SACFG\\"")
@@ -86,6 +87,15 @@ INSTALL(FILES ${files} DESTINATION include/lib)
 
 FILE(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/shared/tcpsocket/*.h")
 INSTALL(FILES ${files} DESTINATION include/shared/tcpsocket)
+
+FILE(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/shared/*.h")
+INSTALL(FILES ${files} DESTINATION include/shared)
+
+FILE(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/shared/uuidgen/*.h")
+INSTALL(FILES ${files} DESTINATION include/shared/uuidgen)
+
+FILE(GLOB files "${CMAKE_CURRENT_SOURCE_DIR}/lib/*.h")
+INSTALL(FILES ${files} DESTINATION include/lib)
             
 
 
