@@ -31,6 +31,7 @@ communications.
 #else
 	#include <netinet/in.h>
 	#include <arpa/inet.h>
+	#include <sys/select.h>
 #endif
 
 #include <errno.h>
