@@ -21,7 +21,7 @@ This software implements a platform independent Store and Forward Message Queue.
 #define _SAFMQ_H_
 
 #include <queue>
-#include <string>
+#include <string.h>
 #include <memory.h>
 #include <wchar.h>
 #include "bufstream.h"

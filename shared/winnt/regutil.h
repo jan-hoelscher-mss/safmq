@@ -22,7 +22,7 @@ This software implements a Win32 registry access class
 
 #pragma warning(disable:4290) // Disable warning about exception specifications
 
-#include <Winerror.h>
+#include <winerror.h>
 #include <string>
 #include <exception>
 
@@ -31,7 +31,7 @@ private:
 	std::string msg;
 public:
 
-	CRegKeyException() throw() 	{ }
+	CRegKeyException(char * buffer) throw():msg(buffer) 	{ }
     CRegKeyException(const std::exception& rhs) throw() { 
 		msg = rhs.what();
 	}
@@ -55,6 +55,7 @@ public:
 		long err = ::RegOpenKeyEx(base,path.c_str(),0,access,&regkey);
 		if (err != ERROR_SUCCESS) {
 			char buffer[1024];
+			//std::exception ex(buffer);
 			::FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM|FORMAT_MESSAGE_IGNORE_INSERTS,NULL,
 							GetLastError(),MAKELANGID(LANG_NEUTRAL,SUBLANG_DEFAULT),buffer,sizeof(buffer),NULL);
 			throw CRegKeyException(buffer);

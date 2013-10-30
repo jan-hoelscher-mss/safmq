@@ -17,6 +17,11 @@
 
 This software implements a platform independent Store and Forward Message Queue.
 */
+#ifdef _WIN32
+#define NOMINMAX 1
+#include <windows.h>
+#endif
+
 #include "safmq.h" // include the SAFMQ_INT32 definition
 #include "safmq-Signal.h"
 //////////////////////////////////////////////////////////////////////
@@ -24,7 +29,7 @@ This software implements a platform independent Store and Forward Message Queue.
 //////////////////////////////////////////////////////////////////////
 
 #ifdef _WIN32
-#include <windows.h>
+//#include <windows.h>
 struct signalData {
 	signalData(bool broadcast) {
 		event = ::CreateEvent(NULL,broadcast?TRUE:FALSE,FALSE,NULL);

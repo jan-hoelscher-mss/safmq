@@ -22,12 +22,12 @@ data in a memory buffer.
 #ifndef _BUFSTREAM_H_
 #define _BUFSTREAM_H_
 
-#ifdef _WIN32
-	#undef min
-	#define min _cpp_min
-	#undef max
-	#define max _cpp_max
-#endif
+//#ifdef _WIN32
+//	#undef min
+//	#define min _cpp_min
+//	#undef max
+//	#define max _cpp_max
+//#endif
 
 
 #include <ios>
